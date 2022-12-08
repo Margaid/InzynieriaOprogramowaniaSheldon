@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'register.apps.RegisterConfig',
 ]
 
-AUTH_USER_MODEL = 'register.CustomUser'
+#AUTH_USER_MODEL = 'register.CustomUser'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
