@@ -1,0 +1,18 @@
+<html>
+    <head>
+        <title>Zaloguj się</title>
+    </head>
+
+    <body>
+        <h2>Zaloguj się</h2>
+    <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Zaloguj się</button>
+    <p>Nie masz konta? <a href="/register">Stwórz je</a></p>
+    </form>
+
+
+
+    </body>
+</html>
