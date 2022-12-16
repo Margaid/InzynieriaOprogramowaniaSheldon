@@ -1,0 +1,112 @@
+.start-start {
+    width: 100%;
+    height: 1024px;
+    display: flex;
+    overflow: hidden;
+    position: relative;
+    align-items: flex-start;
+    flex-shrink: 0;
+    border-color: transparent;
+    background-color: rgba(255, 253, 249, 1);
+  }
+  .start-c-zalogujsi {
+    top: 60px;
+    left: 973px;
+    width: 183px;
+    height: 60px;
+    display: flex;
+    position: absolute;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) ;
+    align-items: flex-start;
+    flex-shrink: 0;
+    border-color: transparent;
+  }
+  .start-rectangle16 {
+    top: 0px;
+    left: 0px;
+    width: 183px;
+    height: 60px;
+    position: absolute;
+  }
+  .start-text {
+    top: 17px;
+    left: 30px;
+    color: rgba(26, 131, 26, 1);
+    width: 124px;
+    height: auto;
+    position: absolute;
+    align-self: auto;
+    text-align: center;
+    line-height: normal;
+    margin-right: 0;
+    margin-bottom: 0;
+  }
+  .start-c-zakonto {
+    top: 60px;
+    left: 1177px;
+    width: 183px;
+    height: 60px;
+    display: flex;
+    position: absolute;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) ;
+    align-items: flex-start;
+    flex-shrink: 0;
+    border-color: transparent;
+  }
+  .start-rectangle17 {
+    top: 0px;
+    left: 0px;
+    width: 183px;
+    height: 60px;
+    position: absolute;
+    border-color: transparent;
+    border-radius: 30px;
+  }
+  .start-text02 {
+    top: 15px;
+    left: 25px;
+    color: rgba(255, 248, 230, 1);
+    width: 134px;
+    height: auto;
+    position: absolute;
+    align-self: auto;
+    text-align: center;
+    line-height: normal;
+    margin-right: 0;
+    margin-bottom: 0;
+  }
+  .start-datascienceillustrationconcept1 {
+    top: 331px;
+    left: 327px;
+    width: 785px;
+    height: 670px;
+    position: absolute;
+    border-color: transparent;
+  }
+  .start-text04 {
+    top: 120px;
+    left: 240px;
+    color: rgba(26, 131, 26, 1);
+    width: 980px;
+    height: auto;
+    position: absolute;
+    align-self: auto;
+    text-align: center;
+    line-height: normal;
+    margin-right: 0;
+    margin-bottom: 0;
+  }
+  .start-text06 {
+    top: 250px;
+    left: 466px;
+    color: rgba(14, 71, 20, 1);
+    width: 507px;
+    height: auto;
+    position: absolute;
+    align-self: auto;
+    text-align: center;
+    line-height: normal;
+    margin-right: 0;
+    margin-bottom: 0;
+  }
+  
