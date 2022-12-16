@@ -1,18 +1,21 @@
-<html>
-    <head>
-        <title>Zaloguj się</title>
-    </head>
+{%extends "home/base.html"%}
+{% block title %}Zaloguj się  {%endblock%}
+{% block content %}
+     <div>
+        
+     </div>   
 
-    <body>
+    <div> 
         <h2>Zaloguj się</h2>
-    <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Zaloguj się</button>
-    <p>Nie masz konta? <a href="/register">Stwórz je</a></p>
-    </form>
+        <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Zaloguj się</button>
+        <p>Nie masz konta? <button onclick="location.href = '/register'">Zaloguj się</button></p>
+        </form>
+    
+</div>   
+
+{%endblock%}
 
 
-
-    </body>
-</html>

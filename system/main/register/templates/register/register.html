@@ -1,18 +1,21 @@
-<html>
-    <head>
-        <title>Zarejestruj sie</title>
-    </head>
+{%extends "home/base.html"%}
+{% block title %}Zarejestruj sie  {%endblock%}
+{% block content %}
+     <div>
+        <button onclick="location.href = '/login'">Zaloguj się</button>
+     </div>   
 
-    <body>
-        <h2>Sign up</h2>
+    <div> 
+        <h3>Utwórz nowe konto</h3>
     <form method="post">
+        <!--formularze rejestracji-->
     {% csrf_token %}
     {{ form.as_p }}
     {{ p_reg_form.as_p }}
-    <button type="submit">Utwórz konto</button>
+
+
+    <button type="submit">Załóż konto</button>
     </form>
+</div>   
 
-
-
-    </body>
-</html>
+{%endblock%}

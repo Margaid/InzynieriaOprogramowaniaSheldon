@@ -1,15 +1,10 @@
-<html>
-    <head>
-        <title>Siema</title>
-    </head>
+{%extends "home/base.html"%}
+{% block title %}Elo  {%endblock%}
+{% block content %}
+<div>
+    <button onclick="location.href = '/login'">Zaloguj się</button>
+    <button onclick="location.href = '/register'">Załóż konto</button>
+</div>    
+   
 
-    <body>
-        
-    <a href="/login">Zaloguj sie</a>
-    <a href="/register">Zarejestruj sie</a>
-    </form>
-
-
-
-    </body>
-</html>
+{%endblock%}
