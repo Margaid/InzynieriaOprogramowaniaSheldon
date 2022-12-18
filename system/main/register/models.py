@@ -9,7 +9,7 @@ from django.conf import settings
 class Profile(models.Model):    
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     #dodanie pola firma do modelu użytkownika
-    firma = models.CharField(max_length=100, blank=True,help_text='test')
+    firma = models.CharField(max_length=100, blank=False)
     #dodanie pola operatora do modelu użytkownika
     operator = models.CharField(max_length=100, blank=False)
 

@@ -1,28 +1,36 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from .models import Profile
 
+#formularz logowania
+class AuthForm(AuthenticationForm):
+    username = forms.CharField(label="",widget=forms.TextInput(attrs={'class':'validate','placeholder': 'Nazwa użytkownika'}))
+    password = forms.CharField(label="",widget=forms.PasswordInput(attrs={'placeholder':'Hasło'}))
+
+#formularz rejestracji 
 class SignUpForm(UserCreationForm):
     username=forms.CharField(max_length=30, label="")
-    username.widget.attrs.update({'placeholder': 'nazwa'})
+    username.widget.attrs.update({'placeholder': 'Nazwa użytkownika'})
     first_name = forms.CharField(max_length=30, required=True,label="")
-    first_name.widget.attrs.update({'placeholder': 'imię'})
+    first_name.widget.attrs.update({'placeholder': 'Imię'})
     last_name = forms.CharField(max_length=30, required=True,label="")
-    last_name.widget.attrs.update({'placeholder': 'nazwisko'},label="")
+    last_name.widget.attrs.update({'placeholder': 'Nazwisko'},label="")
     email = forms.EmailField(max_length=254, label="")
-    email.widget.attrs.update({'placeholder': 'e-mail'},label="")
-    
+    email.widget.attrs.update({'placeholder': 'E-mail'},label="")
+    password1 = forms.CharField(max_length=32, label="", widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Hasło'}))
+    password2 = forms.CharField(max_length=32, label="", widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Potwierdź hasło'}))
 
 
     class Meta:
         model = User
         fields = ('first_name','last_name','username', 'email', 'password1', 'password2',)
         
-
+#dodatkowe pole do formularzu rejestracji      
 class ProfileForm(forms.ModelForm):
-    firma = forms.CharField(label="")
-    firma.widget.attrs.update({'placeholder': 'firma'})
+    firma = forms.CharField(label="",required=False)
+    firma.widget.attrs.update({'placeholder': 'Firma'})
+    rodo=forms.BooleanField(label="RODO",required=True)
     class Meta:
         model=Profile
-        fields=['firma',]
+        fields=['firma','rodo']
