@@ -8,4 +8,5 @@ urlpatterns = [
     path("register/",views.register,name="register"),
     path("login/",auth_views.LoginView.as_view(authentication_form=AuthForm), name='login'),
     path("register/waiting/",views.waiting),
+    path("register/rodo/",views.rodo),
 ]

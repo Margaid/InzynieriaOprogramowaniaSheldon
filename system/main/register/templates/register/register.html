@@ -11,9 +11,13 @@
         <!--formularze rejestracji-->
     {% csrf_token %}
     {{ form.as_p }}
-    {{ p_reg_form.as_p }}
-
-
+    <div >
+        {{ p_reg_form.firma }}
+    </div>
+    <div >
+        {{ p_reg_form.rodo }}
+        <label><a href="/register/rodo">RODO</a></label>
+    </div>
     <button type="submit">Załóż konto</button>
     </form>
 </div>   

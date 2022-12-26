@@ -36,3 +36,6 @@ def register(request):
 
 def waiting(response):
     return render(response, 'waiting/waiting.html')
+
+def rodo(response):
+    return render(response, 'register/rodo.html')
