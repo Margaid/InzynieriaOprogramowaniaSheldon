@@ -1,17 +1,12 @@
-<html>
-    <head>
-        <title>czekaj</title>
-    </head>
-
-    <body>
-      <div>
-        <button onclick="location.href = '/login'">Zaloguj się</button>
-        <button onclick="location.href = '/register'">Załóż konto</button>
-    </div>
-      czekanie na potwierdzenie
-    
+{%extends "home/base.html"%}
+{% block title %}Czekaj {%endblock%}
+{% block content %}
+<div>
+  <button onclick="location.href = '/login'">Zaloguj się</button>
+  <button onclick="location.href = '/register'">Załóż konto</button>
+</div>
+czekanie na potwierdzenie
 
 
+{%endblock%}
 
-    </body>
-</html>

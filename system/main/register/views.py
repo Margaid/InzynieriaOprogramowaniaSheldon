@@ -1,5 +1,8 @@
 from django.contrib.auth import login, authenticate
+#from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render, redirect
+#from django.views import View
+from django.contrib.auth.models import User
 from .forms import SignUpForm,ProfileForm
 
 # Create your views here.
@@ -39,3 +42,4 @@ def waiting(response):
 
 def rodo(response):
     return render(response, 'register/rodo.html')
+

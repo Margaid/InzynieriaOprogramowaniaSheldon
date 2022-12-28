@@ -18,7 +18,7 @@ class SignUpForm(UserCreationForm):
     last_name.widget.attrs.update({'placeholder': 'Nazwisko'},label="")
     email = forms.EmailField(max_length=254, label="")
     email.widget.attrs.update({'placeholder': 'E-mail'},label="")
-    password1 = forms.CharField(max_length=32, label="", widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Hasło'}))
+    password1 = forms.CharField(max_length=32, label="", widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Hasło (max 32 znaki)'}))
     password2 = forms.CharField(max_length=32, label="", widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Potwierdź hasło'}))
 
 
@@ -28,9 +28,9 @@ class SignUpForm(UserCreationForm):
         
 #dodatkowe pole do formularzu rejestracji      
 class ProfileForm(forms.ModelForm):
-    firma = forms.CharField(label="",required=False)
-    firma.widget.attrs.update({'placeholder': 'Firma'})
+    firm = forms.CharField(label="",required=False)
+    firm.widget.attrs.update({'placeholder': 'Firma (nieobowiązkowe)'})
     rodo=forms.BooleanField(label="RODO",required=True)
     class Meta:
         model=Profile
-        fields=['firma','rodo']
+        fields=['firm','rodo']
