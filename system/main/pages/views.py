@@ -1,5 +1,9 @@
 from django.shortcuts import render, redirect
 from .decorators import user_required, operator_required, admin_required,superadmin_required
+from django.contrib.auth.models import User
+from .forms import ProfileForm_for_admin
+from django.http import HttpResponse
+import json
 # Create your views here.
 
 def page(request):
@@ -30,5 +34,41 @@ def admin(response):
     return render(response, 'users_pages/admin.html')    
 
 @superadmin_required
-def superuser(response):
-    return render(response, 'users_pages/superadmin.html')  
+def superuser(request):
+    users = User.objects.all()
+    #id=request.GET.get("id_for_django_view")
+    #user=User.objects.get(id=2)
+    
+    '''
+    if request.is_ajax():
+        id = request.GET.get('id', '')
+        user = User.objects.get(id=id)
+        data={
+        'is_user': user.profile.is_user,
+        'is_operator': user.profile.is_operator,
+        'is_admin': user.profile.is_admin,
+        'firm': user.profile.firm,
+         }
+        form = ProfileForm_for_admin(initial=data,instance=user)
+
+        # send back whatever properties you have updated
+        json_response = {'form': form}
+
+        return HttpResponse(json.dumps(json_response),
+            content_type='application/json')
+'''
+   # if request.method == 'POST':
+        
+    #    form = ProfileForm_for_admin(request.POST,instance=request.user)
+     #   if form.is_valid():
+     #       form.save()
+            #user.refresh_from_db()  
+           # p_reg_form = ProfileForm(request.POST, instance=user.profile)
+           # p_reg_form.full_clean()
+          #  p_reg_form.save()
+            #messages.success(request, f'Your account has been sent for approval!')
+           # return redirect('waiting/')
+  #  else:
+   #     form = ProfileForm_for_admin(instance=request.user)
+
+    return render(request, 'users_pages/superadmin.html',{'users':users,})  

@@ -20,13 +20,18 @@ class Profile(models.Model):
     #dodanie pola operatora do modelu użytkownika
     operator = models.CharField(max_length=100, choices=OPERATORS, blank=True)
     
+    
+    NOT_APPROVED=0
+    APPROVED=1
+    REJECTED=2
     #status użytkownika
     STATUS=(
-        (-1,('odrzucony użytkownik')),
-        (0,('niezatwierdzony użytkownik')),
-        (1,('zatwierdzony użytkownik')),
+        (NOT_APPROVED,('niezatwierdzony użytkownik')),
+        (APPROVED,('zatwierdzony użytkownik')),
+        (REJECTED,('odrzucony użytkownik'))
+        
     )
-    approval=models.PositiveSmallIntegerField(choices=STATUS,default=0)
+    approval=models.PositiveSmallIntegerField(choices=STATUS,default=NOT_APPROVED)
 
     #rodzaj konta
     is_user=models.BooleanField(default=True)

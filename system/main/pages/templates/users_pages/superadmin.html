@@ -1,15 +1,94 @@
 {%extends "base/base.html"%}
 {% block title %} superadmin {%endblock%}
 
+{% block head %} 
+<style>
+    #not_approved_users div{
+        background-color: indianred;
+        text-align: center;
+    }
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+//wyświetlenie listy rezerwacji
+function reservation(){
+    users=document.getElementById('not_approved_users')
+    users.style.display='none'
+
+    reservations=document.getElementById('list_of_reservations')
+    reservations.style.display='block'
+}
+//wyświetlenie listy użytkowników do zatwierdzenia
+function approving_users(){
+    users=document.getElementById('not_approved_users')
+    users.style.display='grid'
+
+    reservations=document.getElementById('list_of_reservations')
+    reservations.style.display='none'
+}
+
+function funkcja(id){
+    console.log(id)
+    document.getElementById('user_info').innerHTML=id;
+    //document.getElementById('user_info').innerHTML=form;
+/*
+    $.ajax({
+    url : 'superuser/',
+    data : {
+      'id' : id,
+    },
+    type : 'GET',
+   
+    });
+
+
+    $.get('superuser/', {'id':id}, function(json_response) {
+        console.log(json_response.form);
+});
+*/
+}
+</script>
+{%endblock%}
+
+
 {% block icons %}
-<button>rezerwacja</button>
-<button>dodanie</button>   
+<button onclick="reservation()">rezerwacja</button>
+<button onclick="approving_users()" >dodanie</button>   
 
 {%endblock%}
 
 
 {% block usertype %}
 superadmin  
+{%endblock%}
+
+{%block list%}
+<!--lista niezatwierdzonych użytkowników-->
+<div id="not_approved_users" style="display:none">
+    {% for user in users %}
+    {% if user.profile.approval == 0 %}
+    <div onclick="funkcja('{{user.id}}')" id="user_id">{{user.first_name}} {{user.last_name}}</div>
+    <!--<p id="id_for_django_view" >2</p>-->
+    {%endif%}
+    {% endfor %}
+</div>
+
+
+
+<!--lista rezerwacji-->
+<div id="list_of_reservations" style="display:none">
+    {% for user in users %}
+    <li >{{user.profile}}</li>
+    {% endfor %}
+</div>
+{%endblock%}
+
+{% block content %}
+<div id="user_info">
+
+<div>
+</div>
+</div>
    
 
 {%endblock%}
