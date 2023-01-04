@@ -1,9 +1,13 @@
 from django.shortcuts import render, redirect
 from .decorators import user_required, operator_required, admin_required,superadmin_required
 from django.contrib.auth.models import User
+from register.models import Profile
 from .forms import ProfileForm_for_admin
-from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponse,HttpResponseBadRequest, JsonResponse
+from django.core.serializers import serialize
 import json
+from itertools import chain
 # Create your views here.
 
 def page(request):
@@ -71,4 +75,15 @@ def superuser(request):
   #  else:
    #     form = ProfileForm_for_admin(instance=request.user)
 
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+    
+    if is_ajax:
+        if request.method == 'GET':
+            id = request.GET.get("id", None)
+            if User.objects.filter(id = id).exists():
+                user = User.objects.filter(id = id).values()
+                profile=Profile.objects.filter(id = id).values()
+                return JsonResponse({'context': list(chain(user,profile))})
+        return JsonResponse({'status': 'Invalid request'}, status=400)
     return render(request, 'users_pages/superadmin.html',{'users':users,})  
+

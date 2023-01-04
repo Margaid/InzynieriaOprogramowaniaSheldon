@@ -28,25 +28,42 @@ function approving_users(){
 }
 
 function funkcja(id){
-    console.log(id)
-    document.getElementById('user_info').innerHTML=id;
-    //document.getElementById('user_info').innerHTML=form;
-/*
-    $.ajax({
-    url : 'superuser/',
-    data : {
-      'id' : id,
-    },
-    type : 'GET',
-   
+
+$.ajax({
+        url: '/page/superuser/',
+       // headers: {"X-Requested-With": "XMLHttpRequest"},
+        type: "GET",
+        data: {"id": id},
+        dataType: "json",
+        success: (data) => {
+        console.log(data)
+        const user_info_first_name = $("#user_info");
+        user_info_first_name.empty();
+        user=data.context[0]
+        profile=data.context[1]
+
+        const first_name = `<p> ${user.first_name}</p>`
+        user_info_first_name.append(first_name);
+
+        /*
+        (data.context).forEach(user => {
+            const HTMLElement = `
+            
+                <p> ${user.approval}</p>
+                
+            `
+            user_info.append(HTMLElement);
+        });
+        */
+        },
+        error: (error) => {
+        console.log(error);
+        }
     });
 
 
-    $.get('superuser/', {'id':id}, function(json_response) {
-        console.log(json_response.form);
-});
-*/
 }
+
 </script>
 {%endblock%}
 
@@ -67,8 +84,8 @@ superadmin
 <div id="not_approved_users" style="display:none">
     {% for user in users %}
     {% if user.profile.approval == 0 %}
-    <div onclick="funkcja('{{user.id}}')" id="user_id">{{user.first_name}} {{user.last_name}}</div>
-    <!--<p id="id_for_django_view" >2</p>-->
+   <div onclick="funkcja('{{user.id}}')" id="user_id">{{user.first_name}} {{user.last_name}}</div>
+   <!--<p id="id_for_django_view" >2</p>-->
     {%endif%}
     {% endfor %}
 </div>
