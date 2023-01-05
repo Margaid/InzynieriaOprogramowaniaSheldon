@@ -1,82 +1,144 @@
 {%extends "base/base.html"%}
 {% block title %} superadmin {%endblock%}
 
-{% block head %} 
+{% block head %}
 <style>
-    #not_approved_users div{
+    #not_approved_users div {
         background-color: indianred;
         text-align: center;
+    }
+    
+    /* wygląd formularza
+    #div_id_Userdata-firm{
+        
+    }
+    #div_id_Userdata-is_user{
+        
+    }
+    #div_id_Userdata-is_operator{
+        
+    }
+    #div_id_Userdata-is_admin{
+        
+    }
+    */
+    label.form-label{
+        width:50px;
     }
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-//wyświetlenie listy rezerwacji
-function reservation(){
-    users=document.getElementById('not_approved_users')
-    users.style.display='none'
+    //wyświetlenie listy rezerwacji
+    function reservation() {
+        users = document.getElementById('not_approved_users')
+        users.style.display = 'none'
 
-    reservations=document.getElementById('list_of_reservations')
-    reservations.style.display='block'
-}
-//wyświetlenie listy użytkowników do zatwierdzenia
-function approving_users(){
-    users=document.getElementById('not_approved_users')
-    users.style.display='grid'
+        reservations = document.getElementById('list_of_reservations')
+        reservations.style.display = 'block'
+    }
+    //wyświetlenie listy użytkowników do zatwierdzenia
+    function approving_users() {
+        users = document.getElementById('not_approved_users')
+        users.style.display = 'grid'
 
-    reservations=document.getElementById('list_of_reservations')
-    reservations.style.display='none'
-}
+        reservations = document.getElementById('list_of_reservations')
+        reservations.style.display = 'none'
+    }
 
-function funkcja(id){
+    function funkcja(id) {
 
-$.ajax({
-        url: '/page/superuser/',
-       // headers: {"X-Requested-With": "XMLHttpRequest"},
-        type: "GET",
-        data: {"id": id},
-        dataType: "json",
-        success: (data) => {
-        console.log(data)
-        const user_info_first_name = $("#user_info");
-        user_info_first_name.empty();
-        user=data.context[0]
-        profile=data.context[1]
+        $.ajax({
+            url: '/page/superuser/',
+            // headers: {"X-Requested-With": "XMLHttpRequest"},
+            type: "GET",
+            data: { "id": id },
+           // dataType: "json",
+            success: (data) => {
+                console.log(data)
+                const user_info_first_name = $("#user_info");
+                user_info_first_name.empty();
+                user = data.context[0]
+                profile = data.context[1]
 
-        const first_name = `<p> ${user.first_name}</p>`
-        user_info_first_name.append(first_name);
+                const first_name = `<p> ${user.first_name}</p>`
+                user_info_first_name.append(first_name);
 
-        /*
-        (data.context).forEach(user => {
-            const HTMLElement = `
-            
-                <p> ${user.approval}</p>
-                
-            `
-            user_info.append(HTMLElement);
+                $('#u').html(data['form']);
+                const submit=`<button type=submit> potwierdz </button>`;
+                $('#u').append(submit);
+                /*
+                (data.context).forEach(user => {
+                    const HTMLElement = `
+                    
+                        <p> ${user.approval}</p>
+                        
+                    `
+                    user_info.append(HTMLElement);
+                });
+                */
+            },
+            error: (error) => {
+                console.log(error);
+            }
         });
-        */
-        },
-        error: (error) => {
-        console.log(error);
-        }
-    });
 
+
+    }
+
+function approving(){
+    
+
+        //const csrftoken = Cookies.get('csrftoken');
+        function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+//const csrftoken = getCookie('csrftoken');
+
+
+
+        $.ajax({
+            url: '/page/superuser/',
+            type: "PUT",
+            dataType: "json",
+         //   data: { "id": id },
+            headers: {
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRFToken": getCookie("csrftoken"),  
+            },
+            success: (data) => {
+                console.log(data);
+            },
+            error: (error) => {
+                console.log(error);
+            }
+        });
 
 }
-
 </script>
 {%endblock%}
 
 
 {% block icons %}
 <button onclick="reservation()">rezerwacja</button>
-<button onclick="approving_users()" >dodanie</button>   
+<button onclick="approving_users()">dodanie</button>
 
 {%endblock%}
 
 
 {% block usertype %}
-superadmin  
+superadmin
 {%endblock%}
 
 {%block list%}
@@ -84,8 +146,8 @@ superadmin
 <div id="not_approved_users" style="display:none">
     {% for user in users %}
     {% if user.profile.approval == 0 %}
-   <div onclick="funkcja('{{user.id}}')" id="user_id">{{user.first_name}} {{user.last_name}}</div>
-   <!--<p id="id_for_django_view" >2</p>-->
+    <div onclick="funkcja('{{user.id}}')" id="user_id">{{user.first_name}} {{user.last_name}}</div>
+    <!--<p id="id_for_django_view" >2</p>-->
     {%endif%}
     {% endfor %}
 </div>
@@ -95,7 +157,7 @@ superadmin
 <!--lista rezerwacji-->
 <div id="list_of_reservations" style="display:none">
     {% for user in users %}
-    <li >{{user.profile}}</li>
+    <li>{{user.profile}}</li>
     {% endfor %}
 </div>
 {%endblock%}
@@ -103,9 +165,12 @@ superadmin
 {% block content %}
 <div id="user_info">
 
-<div>
+ 
 </div>
-</div>
-   
 
+<div id="u">
+</div>
+<div>
+    
+</div>
 {%endblock%}

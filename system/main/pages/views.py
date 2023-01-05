@@ -8,7 +8,10 @@ from django.http import HttpResponse,HttpResponseBadRequest, JsonResponse
 from django.core.serializers import serialize
 import json
 from itertools import chain
-# Create your views here.
+from django.core import serializers
+from django.template.context_processors import csrf
+from crispy_forms.utils import render_crispy_form
+
 
 def page(request):
     user=request.user
@@ -76,14 +79,61 @@ def superuser(request):
    #     form = ProfileForm_for_admin(instance=request.user)
 
     is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
-    
+    id=0
     if is_ajax:
         if request.method == 'GET':
             id = request.GET.get("id", None)
             if User.objects.filter(id = id).exists():
                 user = User.objects.filter(id = id).values()
                 profile=Profile.objects.filter(id = id).values()
-                return JsonResponse({'context': list(chain(user,profile))})
+                #pola do zmiany przy zatwierdzeniu 
+                user2 = User.objects.get(id=id)
+                data={
+                'is_user': user2.profile.is_user,
+                'is_operator':user2.profile.is_operator,
+                'is_admin': user2.profile.is_admin,
+                
+                # tu zmienić na operatorów
+                'firm': user2.profile.firm,
+                }
+                form = ProfileForm_for_admin(initial=data,instance=user2,prefix="Userdata")
+                userr=user2.__dict__
+
+                ctx = {}
+                ctx.update(csrf(request))
+
+                form_html = render_crispy_form(form, context=ctx)
+
+              #  if form.is_valid():
+                #    form.cleaned_data
+                 # json_response={'context': list(chain(user,profile)),'form':form}
+                #return JsonResponse({'context': list(chain(user,profile)),'form':list(userr)},safe=False)
+                return JsonResponse({'context': list(chain(user,profile)),'form':form_html},safe=False)
+                #data = serializers.serialize('json', self.get_queryset())
+               # userr = User.objects.get(id=id)
+               # return HttpResponse(json.dumps({'context': user}))
+                #return JsonResponse(json.dumps(json_response))
         return JsonResponse({'status': 'Invalid request'}, status=400)
+
+    if is_ajax:
+        
+        if request.method == 'PUT':
+
+            data = json.load(request)
+            id = data.get('id')
+
+
+            todo = get_object_or_404(User, id=id)
+           # data = json.load(request)
+          #  updated_values = data.get('payload')
+
+          #  todo.task = updated_values['task']
+          #  todo.completed = updated_values['completed']
+         #   todo.save()
+
+            return JsonResponse({'status': 'git'})
+        return JsonResponse({'status': 'Invalid request'}, status=400)
+
+
     return render(request, 'users_pages/superadmin.html',{'users':users,})  
 
