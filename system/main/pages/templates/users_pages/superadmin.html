@@ -7,27 +7,14 @@
         background-color: indianred;
         text-align: center;
     }
+    #approving_button{
+        width:300px;
+    }
+   
     
-    /* wygląd formularza
-    #div_id_Userdata-firm{
-        
-    }
-    #div_id_Userdata-is_user{
-        
-    }
-    #div_id_Userdata-is_operator{
-        
-    }
-    #div_id_Userdata-is_admin{
-        
-    }
-    */
-    label.form-label{
-        width:50px;
-    }
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
+<script type="text/javascript">
     //wyświetlenie listy rezerwacji
     function reservation() {
         users = document.getElementById('not_approved_users')
@@ -45,6 +32,7 @@
         reservations.style.display = 'none'
     }
 
+
     function funkcja(id) {
 
         $.ajax({
@@ -57,15 +45,18 @@
                 console.log(data)
                 const user_info_first_name = $("#user_info");
                 user_info_first_name.empty();
-                user = data.context[0]
-                profile = data.context[1]
+                user = data.context[0];
+                profile = data.context[1];
 
-                const first_name = `<p> ${user.first_name}</p>`
+                const first_name = `<p id="test"> ${user.id}</p>`
                 user_info_first_name.append(first_name);
-
-                $('#u').html(data['form']);
-                const submit=`<button type=submit> potwierdz </button>`;
-                $('#u').append(submit);
+                
+                $('#uu').empty();                
+                $('#uu').html(data['form']);
+               // $('#uu').append(sub);
+                //const submit=`<button type="submit" id="submit_form"> potwierdz </button>`;
+               // $('#uu').append(submit);
+               // $('#u').append(splitted[1]);
                 /*
                 (data.context).forEach(user => {
                     const HTMLElement = `
@@ -85,17 +76,58 @@
 
     }
 
-function approving(){
-    
 
-        //const csrftoken = Cookies.get('csrftoken');
+
+
+$(function () {
+    $("#form_id").submit(function(e){
+        e.preventDefault();
+        console.log("now");
+       
+         // perform ajax operation here with data, action and method
+    }); 
+
+});
+
+$(function () {
+$("#submit-id-submit").on('click', (e) => {
+    console.log("X");
+      // prevent page reload
+      e.preventDefault();
+      // get the values from the form fields
+      const formData = {
+        task: updateTodoForm.elements["todoTaskPut"].value,
+        completed: updateTodoForm.elements["todoCompletedPut"].checked,
+      }
+
+      const todoId = updateTodoForm.elements["todoIdPut"].value;
+      const singleTodoUrl = `/todos/${todoId}/`;
+      updateTodo(singleTodoUrl, formData);
+      $("#updateTodoForm").trigger("reset");
+    });
+ 
+    });
+
+//zatwierdzenie użytkownika
+$(function () {
+$("#uu").on('click','#approving_button', (e) => {
+    e.preventDefault();
+    var id=$("#test").text();
+   
+    const formData = {
+        is_user:form_id.elements['id_is_user'].checked,
+        is_operator:form_id.elements['id_is_operator'].checked,
+        is_admin:form_id.elements['id_is_admin'].checked,
+        id:id
+        }
+        console.log(formData);
+
         function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
         const cookies = document.cookie.split(';');
         for (let i = 0; i < cookies.length; i++) {
             const cookie = cookies[i].trim();
-            // Does this cookie string begin with the name we want?
             if (cookie.substring(0, name.length + 1) === (name + '=')) {
                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                 break;
@@ -106,15 +138,13 @@ function approving(){
 }
 //const csrftoken = getCookie('csrftoken');
 
-
-
         $.ajax({
             url: '/page/superuser/',
             type: "PUT",
-            dataType: "json",
-         //   data: { "id": id },
+            //dataType: "json",
+            data: JSON.stringify({formData: formData,}),
             headers: {
-                "X-Requested-With": "XMLHttpRequest",
+                "X-Requested-With": "XMLHttpRequest2",
                 "X-CSRFToken": getCookie("csrftoken"),  
             },
             success: (data) => {
@@ -125,7 +155,12 @@ function approving(){
             }
         });
 
-}
+      
+     // updateTodo(singleTodoUrl, formData);
+   //   $("#updateTodoForm").trigger("reset");
+
+    });
+});
 </script>
 {%endblock%}
 
@@ -170,7 +205,12 @@ superadmin
 
 <div id="u">
 </div>
-<div>
+<div id="XD">
+ 
     
+</div>
+<div id="uu">
+</form>
+
 </div>
 {%endblock%}

@@ -96,7 +96,7 @@ def superuser(request):
                 # tu zmienić na operatorów
                 'firm': user2.profile.firm,
                 }
-                form = ProfileForm_for_admin(initial=data,instance=user2,prefix="Userdata")
+                form = ProfileForm_for_admin(initial=data,instance=user2)
                 userr=user2.__dict__
 
                 ctx = {}
@@ -114,26 +114,27 @@ def superuser(request):
                # return HttpResponse(json.dumps({'context': user}))
                 #return JsonResponse(json.dumps(json_response))
         return JsonResponse({'status': 'Invalid request'}, status=400)
-
-    if is_ajax:
-        
+    
+    is_ajax2 = request.headers.get('X-Requested-With') == 'XMLHttpRequest2'
+    
+    if is_ajax2:
         if request.method == 'PUT':
-
             data = json.load(request)
-            id = data.get('id')
+            updated_values = data.get('formData')
+            id=updated_values['id']
+            is_user=updated_values['is_user']
+            is_operator=updated_values['is_operator']
+            is_admin=updated_values['is_admin']
 
+            user = User.objects.get(id=id)
+            user.profile.is_user=updated_values['is_user']
+            user.profile.is_operator=updated_values['is_operator']
+            user.profile.is_admin=updated_values['is_admin']
+            user.profile.approval=1
+            user.save()
 
-            todo = get_object_or_404(User, id=id)
-           # data = json.load(request)
-          #  updated_values = data.get('payload')
-
-          #  todo.task = updated_values['task']
-          #  todo.completed = updated_values['completed']
-         #   todo.save()
-
-            return JsonResponse({'status': 'git'})
+            return JsonResponse({'id': id,'is_user':is_user})
         return JsonResponse({'status': 'Invalid request'}, status=400)
-
 
     return render(request, 'users_pages/superadmin.html',{'users':users,})  
 
