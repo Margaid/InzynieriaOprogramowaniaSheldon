@@ -2,27 +2,22 @@
 {% block title %} superadmin {%endblock%}
 
 {% block head %}
-<style>
-    #not_approved_users div {
-        background-color: indianred;
-        text-align: center;
-    }
-    #approving_button{
-        width:300px;
-    }
-   
-    
-</style>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript">
+/*
     //wyświetlenie listy rezerwacji
     function reservation() {
         users = document.getElementById('not_approved_users')
         users.style.display = 'none'
 
+        users_info = document.getElementById('more_user_info')
+        users_info.style.display = 'none'
+
         reservations = document.getElementById('list_of_reservations')
         reservations.style.display = 'block'
     }
+
     //wyświetlenie listy użytkowników do zatwierdzenia
     function approving_users() {
         users = document.getElementById('not_approved_users')
@@ -31,42 +26,40 @@
         reservations = document.getElementById('list_of_reservations')
         reservations.style.display = 'none'
     }
+*/
+    //wyświetlanie informacji dodatkowych o wybranym użytkowniku
+    function select_user(id) {
 
-
-    function funkcja(id) {
-
+        users_info = document.getElementsByClassName('more_user_info')
+        console.log(users_info.style)
+        users_info[0].style.display = 'block'
+        console.log(users_info.style)
         $.ajax({
             url: '/page/superuser/',
             // headers: {"X-Requested-With": "XMLHttpRequest"},
             type: "GET",
             data: { "id": id },
-           // dataType: "json",
             success: (data) => {
                 console.log(data)
-                const user_info_first_name = $("#user_info");
-                user_info_first_name.empty();
+                const user_info = $(".user_info");
+                user_info.empty();
                 user = data.context[0];
                 profile = data.context[1];
 
-                const first_name = `<p id="test"> ${user.id}</p>`
-                user_info_first_name.append(first_name);
+                //podstawowe informacje
+                const id=`<p class="id"> ${user.id}</p>`;
+                const username=`<p class="username"> ${user.username}</p>`;
+                const first_name = `<p class="first_name"> ${user.first_name}</p>`;
+                const last_name = `<p class="first_name"> ${user.last_name}</p>`;
                 
-                $('#uu').empty();                
-                $('#uu').html(data['form']);
-               // $('#uu').append(sub);
-                //const submit=`<button type="submit" id="submit_form"> potwierdz </button>`;
-               // $('#uu').append(submit);
-               // $('#u').append(splitted[1]);
-                /*
-                (data.context).forEach(user => {
-                    const HTMLElement = `
-                    
-                        <p> ${user.approval}</p>
-                        
-                    `
-                    user_info.append(HTMLElement);
-                });
-                */
+                user_info.append(id);
+                user_info.append(username);
+                user_info.append(first_name);
+                user_info.append(last_name);
+                 
+                //informacje o użytkowniku do zmiany w formularzu
+                $('.form_crispy').empty();
+                $('.form_crispy').html(data['form']);
             },
             error: (error) => {
                 console.log(error);
@@ -78,94 +71,89 @@
 
 
 
+    //zatwierdzenie użytkownika
+    $(function () {
+        $(".form_crispy").on('click', '#approving_button', (e) => {
+            e.preventDefault();
+            var id = $(".id").text();
 
-$(function () {
-    $("#form_id").submit(function(e){
-        e.preventDefault();
-        console.log("now");
-       
-         // perform ajax operation here with data, action and method
-    }); 
-
-});
-
-$(function () {
-$("#submit-id-submit").on('click', (e) => {
-    console.log("X");
-      // prevent page reload
-      e.preventDefault();
-      // get the values from the form fields
-      const formData = {
-        task: updateTodoForm.elements["todoTaskPut"].value,
-        completed: updateTodoForm.elements["todoCompletedPut"].checked,
-      }
-
-      const todoId = updateTodoForm.elements["todoIdPut"].value;
-      const singleTodoUrl = `/todos/${todoId}/`;
-      updateTodo(singleTodoUrl, formData);
-      $("#updateTodoForm").trigger("reset");
-    });
- 
-    });
-
-//zatwierdzenie użytkownika
-$(function () {
-$("#uu").on('click','#approving_button', (e) => {
-    e.preventDefault();
-    var id=$("#test").text();
-   
-    const formData = {
-        is_user:form_id.elements['id_is_user'].checked,
-        is_operator:form_id.elements['id_is_operator'].checked,
-        is_admin:form_id.elements['id_is_admin'].checked,
-        id:id
-        }
-        console.log(formData);
-
-        function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
+            const formData = {
+                is_user: form_id.elements['id_is_user'].checked,
+                is_operator: form_id.elements['id_is_operator'].checked,
+                is_admin: form_id.elements['id_is_admin'].checked,
+                operator: form_id.elements['id_operator'].value,
+                id: id
             }
-        }
-    }
-    return cookieValue;
-}
-//const csrftoken = getCookie('csrftoken');
+            console.log(formData);
 
-        $.ajax({
-            url: '/page/superuser/',
-            type: "PUT",
-            //dataType: "json",
-            data: JSON.stringify({formData: formData,}),
-            headers: {
-                "X-Requested-With": "XMLHttpRequest2",
-                "X-CSRFToken": getCookie("csrftoken"),  
-            },
-            success: (data) => {
-                console.log(data);
-            },
-            error: (error) => {
-                console.log(error);
+
+            $.ajax({
+                url: '/page/superuser/',
+                type: "PUT",
+                //dataType: "json",
+                data: JSON.stringify({ formData: formData, }),
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest2",
+                    "X-CSRFToken": getCookie("csrftoken"),
+                },
+                success: (data) => {
+                    $('.form_crispy').empty();
+                    let x = '#user_id_' + $.trim(data.id);
+                    $(x).empty();
+                    $('.user_info').empty();
+                },
+                error: (error) => {
+                    console.log(error);
+                }
+            });
+        });
+    });
+    //odrzucenie użytkownika
+    $(function () {
+        $(".form_crispy").on('click', '#disapproving_button', (e) => {
+            e.preventDefault();
+            var id = $(".id").text();
+
+            const formData = {
+                is_user: form_id.elements['id_is_user'].checked,
+                is_operator: form_id.elements['id_is_operator'].checked,
+                is_admin: form_id.elements['id_is_admin'].checked,
+                operator: form_id.elements['id_operator'].value,
+                id: id
             }
+            console.log(formData);
+
+
+            $.ajax({
+                url: '/page/superuser/',
+                type: "PUT",
+                //dataType: "json",
+                data: JSON.stringify({ formData: formData, }),
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest3",
+                    "X-CSRFToken": getCookie("csrftoken"),
+                },
+                success: (data) => {
+                    $('.form_crispy').empty();
+                    let x = '#user_id_' + $.trim(data.id);
+                    $(x).empty();
+                    $('.user_info').empty();
+                },
+                error: (error) => {
+                    console.log(error);
+                }
+            });
         });
 
-      
-     // updateTodo(singleTodoUrl, formData);
-   //   $("#updateTodoForm").trigger("reset");
 
     });
-});
+    
 </script>
 {%endblock%}
 
 
 {% block icons %}
+<!-- przyciski wyboru -->
 <button onclick="reservation()">rezerwacja</button>
 <button onclick="approving_users()">dodanie</button>
 
@@ -178,11 +166,10 @@ superadmin
 
 {%block list%}
 <!--lista niezatwierdzonych użytkowników-->
-<div id="not_approved_users" style="display:none">
+<div class="not_approved_users" style="display:none">
     {% for user in users %}
     {% if user.profile.approval == 0 %}
-    <div onclick="funkcja('{{user.id}}')" id="user_id">{{user.first_name}} {{user.last_name}}</div>
-    <!--<p id="id_for_django_view" >2</p>-->
+    <div onclick="select_user('{{user.id}}')" id="user_id_{{user.id}}">{{user.first_name}} {{user.last_name}}</div>
     {%endif%}
     {% endfor %}
 </div>
@@ -190,7 +177,7 @@ superadmin
 
 
 <!--lista rezerwacji-->
-<div id="list_of_reservations" style="display:none">
+<div class="list_of_reservations" style="display:none">
     {% for user in users %}
     <li>{{user.profile}}</li>
     {% endfor %}
@@ -198,19 +185,18 @@ superadmin
 {%endblock%}
 
 {% block content %}
-<div id="user_info">
+<div class="more_user_info">
 
- 
+<div class="user_info">
+
+
 </div>
 
-<div id="u">
-</div>
-<div id="XD">
- 
+
+<div class="form_crispy">
     
-</div>
-<div id="uu">
-</form>
 
+</div>
 </div>
 {%endblock%}
+

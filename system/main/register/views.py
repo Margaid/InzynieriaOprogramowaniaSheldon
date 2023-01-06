@@ -1,5 +1,4 @@
-from django.contrib.auth import login, authenticate
-#from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth import logout
 from django.shortcuts import render, redirect
 #from django.views import View
 from django.contrib.auth.models import User
@@ -21,7 +20,6 @@ def register(request):
             p_reg_form = ProfileForm(request.POST, instance=user.profile)
             p_reg_form.full_clean()
             p_reg_form.save()
-            #messages.success(request, f'Your account has been sent for approval!')
             return redirect('waiting/')
     else:
         form = SignUpForm()
@@ -31,11 +29,6 @@ def register(request):
         'form': form,
         'p_reg_form': p_reg_form
     })
-
-
-
-#def login(response):
- #   return render(response,'registration/login.html')
 
 def waiting(response):
     return render(response, 'waiting/waiting.html')

@@ -1,7 +1,178 @@
 {%extends "base/base.html"%}
-{% block title %}admin {%endblock%}
-{% block content %}
-admin  
-   
+{% block title %} admin {%endblock%}
+
+{% block head %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript">
+
+
+        //wyświetlanie informacji dodatkowych o wybranym użytkowniku
+        function select_user_admin(id) {
+    
+    users_info = document.getElementsByClassName('more_user_info')
+    users_info[0].style.display = 'block'
+
+    $.ajax({
+        url: '/page/admin/',
+        // headers: {"X-Requested-With": "XMLHttpRequest"},
+        type: "GET",
+        data: { "id": id },
+        success: (data) => {
+            console.log(data)
+            const user_info = $(".user_info");
+            user_info.empty();
+            user = data.context[0];
+            profile = data.context[1];
+
+            //podstawowe informacje
+            const id=`<p class="id"> ${user.id}</p>`;
+            const username=`<p class="username"> ${user.username}</p>`;
+            const first_name = `<p class="first_name"> ${user.first_name}</p>`;
+            const last_name = `<p class="first_name"> ${user.last_name}</p>`;
+            
+            user_info.append(id);
+            user_info.append(username);
+            user_info.append(first_name);
+            user_info.append(last_name);
+             
+            //informacje o użytkowniku do zmiany w formularzu
+            $('.form_crispy').empty();
+            $('.form_crispy').html(data['form']);
+        },
+        error: (error) => {
+            console.log(error);
+        }
+    });
+
+    //zatwierdzenie użytkownika
+    $(function () {
+            $(".form_crispy").on('click', '#approving_button', (e) => {
+                e.preventDefault();
+                var id = $(".id").text();
+    
+                const formData = {
+                    is_user: form_id.elements['id_is_user'].checked,
+                    is_operator: form_id.elements['id_is_operator'].checked,
+                    is_admin: form_id.elements['id_is_admin'].checked,
+                    operator: form_id.elements['id_operator'].value,
+                    id: id
+                }
+                console.log(formData);
+    
+    
+                $.ajax({
+                    url: '/page/admin/',
+                    type: "PUT",
+                    //dataType: "json",
+                    data: JSON.stringify({ formData: formData, }),
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest2",
+                        "X-CSRFToken": getCookie("csrftoken"),
+                    },
+                    success: (data) => {
+                        $('.form_crispy').empty();
+                        let x = '#user_id_' + $.trim(data.id);
+                        $(x).empty();
+                        $('.user_info').empty();
+                    },
+                    error: (error) => {
+                        console.log(error);
+                    }
+                });
+            });
+        });
+        //odrzucenie użytkownika
+        $(function () {
+            $(".form_crispy").on('click', '#disapproving_button', (e) => {
+                e.preventDefault();
+                var id = $(".id").text();
+    
+                const formData = {
+                    is_user: form_id.elements['id_is_user'].checked,
+                    is_operator: form_id.elements['id_is_operator'].checked,
+                    is_admin: form_id.elements['id_is_admin'].checked,
+                    operator: form_id.elements['id_operator'].value,
+                    id: id
+                }
+                console.log(formData);
+    
+    
+                $.ajax({
+                    url: '/page/admin/',
+                    type: "PUT",
+                    //dataType: "json",
+                    data: JSON.stringify({ formData: formData, }),
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest3",
+                        "X-CSRFToken": getCookie("csrftoken"),
+                    },
+                    success: (data) => {
+                        $('.form_crispy').empty();
+                        let x = '#user_id_' + $.trim(data.id);
+                        $(x).empty();
+                        $('.user_info').empty();
+                    },
+                    error: (error) => {
+                        console.log(error);
+                    }
+                });
+            });
+    
+    
+        });
+}
+
+
+    </script>
+</script> 
+{%endblock%}
+
+
+{% block icons %}
+<!-- przyciski wyboru -->
+<button onclick="reservation()">rezerwacja</button>
+<button onclick="approving_users()">dodanie</button>
 
 {%endblock%}
+
+
+{% block usertype %}
+admin
+{%endblock%}
+
+{%block list%}
+<!--lista niezatwierdzonych użytkowników-->
+<div class="not_approved_users" style="display:none">
+    {% for user in users %}
+    {% if user.profile.approval == 0 %}
+    <div onclick="select_user_admin('{{user.id}}')" id="user_id_{{user.id}}">{{user.first_name}} {{user.last_name}}</div>
+    {%endif%}
+    {% endfor %}
+</div>
+
+
+
+<!--lista rezerwacji-->
+<div class="list_of_reservations" style="display:none">
+    {% for user in users %}
+    <li>{{user.profile}}</li>
+    {% endfor %}
+</div>
+{%endblock%}
+
+{% block content %}
+<div class="more_user_info">
+
+<div class="user_info">
+
+
+</div>
+
+
+<div class="form_crispy">
+    
+
+</div>
+</div>
+{%endblock%}
+
