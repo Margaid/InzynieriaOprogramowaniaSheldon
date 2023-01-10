@@ -1,15 +1,22 @@
+{% load static %}
 <html>
     <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %} Siema {% endblock %}</title>
-    </head>
+        <link rel="stylesheet" href="{% static 'style.css' %}">
+        <link rel="preconnect" href="https://fonts.googleapis.com"> 
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300&display=swap" rel="stylesheet">
+      </head>
 
     <body>
-      <h1>System rezerwacji</h1>
+      <h1 class="logo"> Rezerwacja Stanowisk Laboratoryjnych</h1>
+      <h2 class="logo2"> Instytut Fizyki <br>
+        Politechnika Śląska w Gliwicach</h2>
     {% block content %}
 
     {% endblock %}
-
-
 
     </body>
 </html>

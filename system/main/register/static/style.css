@@ -1,0 +1,60 @@
+body {
+    background-color: #FFFDF9;
+  }
+
+.logo {
+
+  font-family: 'Roboto', sans-serif;
+  padding: 10px;
+  font-style: Regular;
+  color: #1A831A;
+  font-size: 45px;
+  line-height: 53px;
+  line-height: 100%;
+  text-align: Center;
+  vertical-align: Center;
+  letter-spacing: 3%;
+}
+
+.logo2 {
+  font-family: 'Roboto', sans-serif;
+  color: #1A831A;
+  font-style: light;
+  font-size: 25px;
+  line-height: 29px;
+  text-align: center;
+  vertical-align: bottom;
+  letter-spacing: 1.2;
+
+}
+
+.zalogujSie{  
+  
+  border-radius: 20px;
+  background-color: #FFF8E6;
+  height: 50px;
+  width: 105px;
+  font-family: 'Roboto', sans-serif;
+  color: #1A831A;
+  font-style: light;
+  font-size: 13px;
+  line-height: 29px;
+  text-align: center;
+  vertical-align: bottom;
+  letter-spacing: 1.2;
+} 
+
+.zalKonto{  
+  border-radius: 20px;
+  background-color: #1A831A;
+  height: 50px;
+  width: 105px;
+  font-family: 'Roboto', sans-serif;
+  color: #FFF8E6;
+  font-style: light;
+  font-size: 13px;
+  line-height: 29px;
+  text-align: center;
+  vertical-align: bottom;
+  letter-spacing: 1.2;
+} 
