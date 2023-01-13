@@ -45,42 +45,42 @@
     });
 
     //zatwierdzenie użytkownika
-    $(function () {
-            $(".form_crispy").on('click', '#approving_button', (e) => {
-                e.preventDefault();
-                var id = $(".id").text();
+    // $(function () {
+    //         $(".form_crispy").on('click', '#approving_button', (e) => {
+    //             e.preventDefault();
+    //             var id = $(".id").text();
     
-                const formData = {
-                    is_user: form_id.elements['id_is_user'].checked,
-                    is_operator: form_id.elements['id_is_operator'].checked,
-                    is_admin: form_id.elements['id_is_admin'].checked,
-                    operator: form_id.elements['id_operator'].value,
-                    id: id
-                }
-                console.log(formData);
+    //             const formData = {
+    //                 is_user: form_id.elements['id_is_user'].checked,
+    //                 is_operator: form_id.elements['id_is_operator'].checked,
+    //                 is_admin: form_id.elements['id_is_admin'].checked,
+    //                 operator: form_id.elements['id_operator'].value,
+    //                 id: id
+    //             }
+    //             console.log(formData);
     
     
-                $.ajax({
-                    url: '/page/admin/',
-                    type: "PUT",
-                    //dataType: "json",
-                    data: JSON.stringify({ formData: formData, }),
-                    headers: {
-                        "X-Requested-With": "XMLHttpRequest2",
-                        "X-CSRFToken": getCookie("csrftoken"),
-                    },
-                    success: (data) => {
-                        $('.form_crispy').empty();
-                        let x = '#user_id_' + $.trim(data.id);
-                        $(x).empty();
-                        $('.user_info').empty();
-                    },
-                    error: (error) => {
-                        console.log(error);
-                    }
-                });
-            });
-        });
+    //             $.ajax({
+    //                 url: '/page/admin/',
+    //                 type: "PUT",
+    //                 //dataType: "json",
+    //                 data: JSON.stringify({ formData: formData, }),
+    //                 headers: {
+    //                     "X-Requested-With": "XMLHttpRequest2",
+    //                     "X-CSRFToken": getCookie("csrftoken"),
+    //                 },
+    //                 success: (data) => {
+    //                     $('.form_crispy').empty();
+    //                     let x = '#user_id_' + $.trim(data.id);
+    //                     $(x).empty();
+    //                     $('.user_info').empty();
+    //                 },
+    //                 error: (error) => {
+    //                     console.log(error);
+    //                 }
+    //             });
+    //         });
+    //     });
         //odrzucenie użytkownika
         $(function () {
             $(".form_crispy").on('click', '#disapproving_button', (e) => {

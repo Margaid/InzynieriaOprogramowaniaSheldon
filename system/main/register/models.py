@@ -7,19 +7,21 @@ from django.conf import settings
 
 
 # Create your models here.
+
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     # dodanie pola firma do modelu użytkownika
     firm = models.CharField(max_length=100, blank=True)
 
-    # # lista operatorów do wyboru
-    # OPERATORS = (
-    #     ('operator1', 'operator maszyny 1'),
-    #     ('operator2', 'operator maszyny 2'),
-    # )
-    # # dodanie pola operatora do modelu użytkownika
-    # operator = models.CharField(max_length=100, choices=OPERATORS, blank=True)
+    # lista operatorów do wyboru
+    OPERATORS = (
+        ('operator1', 'operator maszyny 1'),
+        ('operator2', 'operator maszyny 2'),
+    )
+    # dodanie pola operatora do modelu użytkownika
+    operator = models.CharField(max_length=100, choices=OPERATORS, blank=True)
 
     NOT_APPROVED = 0
     APPROVED = 1

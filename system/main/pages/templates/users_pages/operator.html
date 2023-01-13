@@ -1,7 +1,29 @@
 {%extends "base/base.html"%}
 {% block title %} operator {%endblock%}
-{% block content %}
-operator
-   
+{% block head %}
+<style>
+#button_reservation{
+    width:60px;
+    height: 20px;;
+}
 
+</style>
+    {% endblock %} 
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    {{form.as_p}}
+
+ <button type="submit" id="button_reservation">Wyślij</button>
+</form>
+
+<script>
+  $( function() {
+    $( "#reservation_date" ).datepicker();
+  });
+</script>
+{%endblock%}
+
+{% block icons %}
+<button>stanowiska</button>
 {%endblock%}

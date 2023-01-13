@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from .decorators import user_required, operator_required, admin_required, superadmin_required
 from django.contrib.auth.models import User
 from register.models import Profile
-from .forms import ProfileForm_for_admin
+from .forms import ProfileForm_for_super_admin, ProfileForm_for_admin, ReservationForm_for_user, ReservationForm_for_operator
 from django.http import JsonResponse
 import json
 from itertools import chain
@@ -30,14 +30,31 @@ def page(request):
 
 @user_required
 def user(response):
-    return render(response, 'users_pages/user.html')
+    if response.method == 'POST':
+        form = ReservationForm_for_user(response.POST)
+        if form.is_valid():
+            reservation = form.save(commit=False)
+            reservation.user = response.user
+            reservation.save()
+            return redirect('index')
+    else:
+        form = ReservationForm_for_user()
+    return render(response, 'users_pages/user.html', {'form': form})
+
 
 # strona operatora
-
-
 @operator_required
 def operator(response):
-    return render(response, 'users_pages/operator.html')
+    if response.method == 'POST':
+        form = ReservationForm_for_operator(response.POST)
+        if form.is_valid():
+            reservation = form.save(commit=False)
+            reservation.user = response.user
+            reservation.save()
+            return redirect('index')
+    else:
+        form = ReservationForm_for_operator()
+    return render(response, 'users_pages/operator.html', {'form': form})
 
 # strona admina
 
@@ -135,7 +152,8 @@ def superuser(request):
                     'is_admin': user2.profile.is_admin,
                     'operator': user2.profile.operator,
                 }
-                form = ProfileForm_for_admin(initial=data, instance=user2)
+                form = ProfileForm_for_super_admin(
+                    initial=data, instance=user2)
                 ctx = {}
                 ctx.update(csrf(request))
 
