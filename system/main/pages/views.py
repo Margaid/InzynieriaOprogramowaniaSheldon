@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from .decorators import user_required, operator_required, admin_required, superadmin_required
 from django.contrib.auth.models import User
 from register.models import Profile
-from .forms import ProfileForm_for_super_admin, ProfileForm_for_admin, ReservationForm_for_user, ReservationForm_for_operator
+from .forms import ProfileForm_for_super_admin, ProfileForm_for_admin, ReservationForm_for_user, ReservationForm_for_operator, ReservationDataBase, Form_for_approval_buttons_reservations_superadmin
 from django.http import JsonResponse
 import json
 from itertools import chain
@@ -36,7 +36,6 @@ def user(response):
             reservation = form.save(commit=False)
             reservation.user = response.user
             reservation.save()
-            return redirect('index')
     else:
         form = ReservationForm_for_user()
     return render(response, 'users_pages/user.html', {'form': form})
@@ -51,7 +50,6 @@ def operator(response):
             reservation = form.save(commit=False)
             reservation.user = response.user
             reservation.save()
-            return redirect('index')
     else:
         form = ReservationForm_for_operator()
     return render(response, 'users_pages/operator.html', {'form': form})
@@ -134,7 +132,7 @@ def admin(request):
 @superadmin_required
 def superuser(request):
     users = User.objects.all()
-
+    reservations = ReservationDataBase.objects.all()
     # przekazanie niezatwierdzonych użytkowników
     is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
     if is_ajax:
@@ -200,4 +198,49 @@ def superuser(request):
             return JsonResponse({'id': id, })
         return JsonResponse({'status': 'Invalid request'}, status=400)
 
-    return render(request, 'users_pages/superadmin.html', {'users': users, })
+    # pokazywanie mmore info o rezerwacjach
+    is_ajax4 = request.headers.get('X-Requested-With') == 'XMLHttpRequest4'
+    if is_ajax4:
+        if request.method == 'GET':
+            id = request.GET.get("id", None)
+            if ReservationDataBase.objects.filter(reservation_id=id).exists():
+
+                reservations2 = ReservationDataBase.objects.get(
+                    reservation_id=id)
+                reservations = ReservationDataBase.objects.filter(
+                    reservation_id=id).values()
+                user = User.objects.filter(
+                    id=reservations2.user_id).values()
+                profile = Profile.objects.filter(
+                    id=reservations2.user_id).values()
+
+                data = {
+                    'reservation_id': id,
+                }
+
+                form = Form_for_approval_buttons_reservations_superadmin(
+                    initial=data)
+
+                ctx = {}
+                ctx.update(csrf(request))
+
+                form_html = render_crispy_form(form, context=ctx)
+
+                return JsonResponse({'context': list(reservations), 'user': list(chain(user, profile)), 'form': form_html})
+        return JsonResponse({'status': 'Invalid request'}, status=400)
+
+    # zatwierdzenie rezerwacji
+    # is_ajax5 = request.headers.get('X-Requested-With') == 'XMLHttpRequest5'
+    # if is_ajax5:
+    #     if request.method == 'PUT':
+    #         data = json.load(request)
+    #         updated_values = data.get('formData')
+    #         id = updated_values['reservation_id']
+
+    #         user.profile.approval = 1
+    #         user.save()
+
+    #         return JsonResponse({'id': id, })
+    #     return JsonResponse({'status': 'Invalid request'}, status=400)
+
+    return render(request, 'users_pages/superadmin.html', {'users': users, 'reservations': reservations})

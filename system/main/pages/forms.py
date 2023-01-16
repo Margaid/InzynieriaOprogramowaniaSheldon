@@ -126,3 +126,22 @@ class ProfileForm_for_super_admin(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['is_user', 'is_operator', 'is_admin', 'firm', 'operator']
+
+
+class Form_for_approval_buttons_reservations_superadmin(forms.ModelForm):
+    reservation_id = forms.IntegerField()
+    # crispy form
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_id = "form_id_reservation"
+        self.helper.layout = Layout(
+            # 'reservation_id',
+            Submit('submit', 'Odrzuć', css_id="disapproving_button_reservation"),
+            Submit('submit', 'Akceptuj', css_id="approving_button_reservation"),
+        )
+
+    class Meta:
+        model = ReservationDataBase
+        fields = ['reservation_id', ]

@@ -16,7 +16,7 @@ class ReservationDataBase(models.Model):
     lab_station = models.CharField(max_length=100)
     reservation_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    lab_station_id = models.IntegerField()
+    # lab_station_id = models.IntegerField()
 
     NOT_APPROVED = 0
     APPROVED = 1
@@ -28,8 +28,8 @@ class ReservationDataBase(models.Model):
         (REJECTED, ('odrzucona rezerwacja'))
     )
     approved_status = models.PositiveSmallIntegerField(
-        choices=STATUS, default=NOT_APPROVED)
-    reservation_date = models.DateTimeField()
+        choices=STATUS, default=NOT_APPROVED)  # zrobione
+    # reservation_date = models.DateTimeField()
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     # lista operatorów do wyboru

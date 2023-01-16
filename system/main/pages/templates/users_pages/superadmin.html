@@ -71,6 +71,62 @@
 
 
 
+    function select_reservation(id) {
+       
+    //user_info = document.getElementsByClassName('more_user_info')
+    //user_info[0].style.display = 'none';
+    more_reservations_info = document.getElementsByClassName('more_reservation_info')
+    //more_reservations_info[0].style.display = 'block'
+
+    buttons_reservations = document.getElementsByClassName('buttons_reservations');
+    buttons_reservations[0].style.display = 'block'
+
+    console.log("X");
+    $.ajax({
+        url: '/page/superuser/',
+        headers: {"X-Requested-With": "XMLHttpRequest4"},
+        type: "GET",
+        data: { "id": id },
+        success: (data) => {
+            console.log(data)
+            const more_reservation_info = $(".more_reservation_info");
+            more_reservation_info.empty();
+            reservation = data.context[0];
+            user2 = data.user[1];
+            user=data.user[0];
+
+             const id=`<p class="reservation_id"> ${reservation.reservation_id}</p>`;
+            
+            const first_name = `<p class="first_name"> ${user.first_name}</p>`;
+            const last_name = `<p class="first_name"> ${user.last_name}</p>`;
+            const email = `<p class="email"> ${user.email}</p>`;
+            const firm = `<p class="firm"> ${user2.firm}</p>`;
+            const start_date = `<p class="start_date"> ${reservation.start_date.substring(0,10)}</p>`;
+            const end_date = `<p class="end_date"> ${reservation.end_date.substring(0,10)}</p>`;
+
+            // console.log(email);
+            more_reservation_info.append(id);
+            more_reservation_info.append(email);
+            more_reservation_info.append(first_name);
+            more_reservation_info.append(last_name);
+            more_reservation_info.append(firm)
+            more_reservation_info.append(start_date)
+            more_reservation_info.append(end_date)
+
+            // informacje o użytkowniku do zmiany w formularzu
+            $('.form_crispy_reservation').empty();
+            $('.form_crispy_reservation').html(data['form']);
+        },
+        error: (error) => {
+            console.log(error);
+        }
+    });
+
+    
+    }
+
+
+
     //zatwierdzenie użytkownika
     $(function () {
         $(".form_crispy").on('click', '#approving_button', (e) => {
@@ -148,6 +204,33 @@
 
     });
     
+    $(function () {
+        $(".form_crispy_reservation").on('click', '#approving_button_reservation', (e) => {
+            e.preventDefault();
+            var id = $(".reservation_id").text();
+           
+           console.log(id);
+            $.ajax({
+                url: '/page/superuser/',
+                type: "PUT",
+                //dataType: "json",
+                data: JSON.stringify({ id: id, }),
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest5",
+                    "X-CSRFToken": getCookie("csrftoken"),
+                },
+                success: (data) => {
+                    $('.form_crispy_reservation').empty();
+                    // let x = '#user_id_' + $.trim(data.id);
+                    // $(x).empty();
+                    // $('.user_info').empty();
+                },
+                error: (error) => {
+                    console.log(error);
+                }
+            });
+        });
+    });
 </script>
 {%endblock%}
 
@@ -175,26 +258,46 @@ superadmin
 </div>
 
 <!--lista rezerwacji-->
+<!-- <script>
+    reservations2 = [];
+    for (let i = 0; i < reservations.length; i++) {
+  reservations2.append(reservations[i].substring(0,10));
+} 
+reservations = reservations2
+</script> -->
 <div class="list_of_reservations" style="display:none">
-    {% for user in users %}
-    <li>{{user.profile}}</li>
+    {% for r in  reservations %}
+    <div onclick="select_reservation('{{r.reservation_id}}')">  {{r.start_date}}</div>
     {% endfor %}
+    
 </div>
 {%endblock%}
 
 {% block content %}
-<div class="more_user_info">
+<div class="more_reservation_info" >
 
-<div class="user_info">
 
 
 </div>
-
-
-<div class="form_crispy">
+<div class="buttons_reservations" style="display:none">
     
 
 </div>
+<div class="form_crispy_reservation"></div>
+
+
+<div class="more_user_info" >
+
+    <div class="user_info">
+
+
+    </div>
+
+
+    <div class="form_crispy">
+    
+
+    </div>
 </div>
 {%endblock%}
 
