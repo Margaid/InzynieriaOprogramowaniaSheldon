@@ -9,35 +9,46 @@
 
 </style>
 <script>
-//  function reservation() {
-//             users = document.getElementsByClassName('not_approved_users')
-//             users[0].style.display = 'none'
+ function prosby_o_rezerwacje() {
+            users = document.getElementsByClassName('not_approved_users')
+            users[0].style.display = 'none'
     
-//             users_info = document.getElementsByClassName('more_user_info')
-//             users_info[0].style.display = 'none'
-    
-//             reservations = document.getElementsByClassName('list_of_reservations')
-//             reservations[0].style.display = 'block'
-
-//             more_reservations=document.getElementsByClassName('more_reservation_info')
-//             more_reservations[0].style.display = 'block'
-//         }
-// </script>
+            
+        }
+</script>
     {% endblock %} 
+
+    {% block icons %}
+    <button onclick="prosby_o_rezerwacje()">prośba</button>
+    <button onclick="rezerwacja_operatora()">rezerwacja</button>
+    {%endblock%}
+
+    {% block list %}
+    <div id="list_of_reservations_operator"></div>
+    <div id="reservation_operator"></div>
+    {%endblock%}
+
 
 
 {% block content %}
+
+
+<div id="more_reservation_info_operator">
+
+<div id="reservation_info_operator"></div>
+<div id="form_crispy_operator"></div>
+</div>
+
+
+<div id="form_for_operator">
 <form method="post">
     {% csrf_token %}
     {{form.as_p}}
 
  <button type="submit" id="button_reservation">Wyślij</button>
 </form>
-
+</div>
 
 {%endblock%}
 
-{% block icons %}
-<button >prośba</button>
-<button>stanowiska</button>
-{%endblock%}
+
