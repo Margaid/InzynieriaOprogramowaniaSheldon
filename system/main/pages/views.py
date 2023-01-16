@@ -229,18 +229,30 @@ def superuser(request):
                 return JsonResponse({'context': list(reservations), 'user': list(chain(user, profile)), 'form': form_html})
         return JsonResponse({'status': 'Invalid request'}, status=400)
 
-    # zatwierdzenie rezerwacji
-    # is_ajax5 = request.headers.get('X-Requested-With') == 'XMLHttpRequest5'
-    # if is_ajax5:
-    #     if request.method == 'PUT':
-    #         data = json.load(request)
-    #         updated_values = data.get('formData')
-    #         id = updated_values['reservation_id']
+   # zatwierdzenie rezerwacji
+    is_ajax5 = request.headers.get('X-Requested-With') == 'XMLHttpRequest5'
+    if is_ajax5:
+        if request.method == 'PUT':
+            data = json.load(request)
+            id = data.get('id')
+            reservations = ReservationDataBase.objects.get(reservation_id=id)
+            reservations.approved_status = 1
+            reservations.save()
 
-    #         user.profile.approval = 1
-    #         user.save()
+            return JsonResponse({'id': id, })
+        return JsonResponse({'status': 'Invalid request'}, status=400)
 
-    #         return JsonResponse({'id': id, })
-    #     return JsonResponse({'status': 'Invalid request'}, status=400)
+    # odrzucenie rezerwacji
+    is_ajax6 = request.headers.get('X-Requested-With') == 'XMLHttpRequest6'
+    if is_ajax6:
+        if request.method == 'PUT':
+            data = json.load(request)
+            id = data.get('id')
+            reservations = ReservationDataBase.objects.get(reservation_id=id)
+            reservations.approved_status = 2
+            reservations.save()
+
+            return JsonResponse({'id': id, })
+        return JsonResponse({'status': 'Invalid request'}, status=400)
 
     return render(request, 'users_pages/superadmin.html', {'users': users, 'reservations': reservations})

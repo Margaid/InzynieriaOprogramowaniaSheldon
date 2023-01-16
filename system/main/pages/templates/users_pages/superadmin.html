@@ -76,10 +76,10 @@
     //user_info = document.getElementsByClassName('more_user_info')
     //user_info[0].style.display = 'none';
     more_reservations_info = document.getElementsByClassName('more_reservation_info')
-    //more_reservations_info[0].style.display = 'block'
+    more_reservations_info[0].style.display = 'block'
 
-    buttons_reservations = document.getElementsByClassName('buttons_reservations');
-    buttons_reservations[0].style.display = 'block'
+    // buttons_reservations = document.getElementsByClassName('buttons_reservations');
+    // buttons_reservations[0].style.display = 'block'
 
     console.log("X");
     $.ajax({
@@ -89,20 +89,20 @@
         data: { "id": id },
         success: (data) => {
             console.log(data)
-            const more_reservation_info = $(".more_reservation_info");
+            const more_reservation_info = $(".reservation_info");
             more_reservation_info.empty();
-            reservation = data.context[0];
+            reservation_data = data.context[0];
             user2 = data.user[1];
             user=data.user[0];
 
-             const id=`<p class="reservation_id"> ${reservation.reservation_id}</p>`;
+             const id=`<p class="reservation_id"> ${reservation_data.reservation_id}</p>`;
             
             const first_name = `<p class="first_name"> ${user.first_name}</p>`;
             const last_name = `<p class="first_name"> ${user.last_name}</p>`;
             const email = `<p class="email"> ${user.email}</p>`;
             const firm = `<p class="firm"> ${user2.firm}</p>`;
-            const start_date = `<p class="start_date"> ${reservation.start_date.substring(0,10)}</p>`;
-            const end_date = `<p class="end_date"> ${reservation.end_date.substring(0,10)}</p>`;
+            const start_date = `<p class="start_date"> ${reservation_data.start_date.substring(0,10)}</p>`;
+            const end_date = `<p class="end_date"> ${reservation_data.end_date.substring(0,10)}</p>`;
 
             // console.log(email);
             more_reservation_info.append(id);
@@ -155,7 +155,7 @@
                 success: (data) => {
                     $('.form_crispy').empty();
                     let x = '#user_id_' + $.trim(data.id);
-                    $(x).empty();
+                    $(x).remove();
                     $('.user_info').empty();
                 },
                 error: (error) => {
@@ -192,7 +192,7 @@
                 success: (data) => {
                     $('.form_crispy').empty();
                     let x = '#user_id_' + $.trim(data.id);
-                    $(x).empty();
+                    $(x).remove();
                     $('.user_info').empty();
                 },
                 error: (error) => {
@@ -203,7 +203,7 @@
 
 
     });
-    
+    //zatwierdzenie rezerwacji
     $(function () {
         $(".form_crispy_reservation").on('click', '#approving_button_reservation', (e) => {
             e.preventDefault();
@@ -220,10 +220,43 @@
                     "X-CSRFToken": getCookie("csrftoken"),
                 },
                 success: (data) => {
+                    console.log(data)
                     $('.form_crispy_reservation').empty();
-                    // let x = '#user_id_' + $.trim(data.id);
-                    // $(x).empty();
-                    // $('.user_info').empty();
+                    $(".reservation_info").empty();
+                     let x = '#reservation_id_' + $.trim(data.id);
+                     $(x).remove();
+                    
+                },
+                error: (error) => {
+                    console.log(error);
+                }
+            });
+        });
+    });
+
+        //odrzucenie rezerwacji
+        $(function () {
+        $(".form_crispy_reservation").on('click', '#disapproving_button_reservation', (e) => {
+            e.preventDefault();
+            var id = $(".reservation_id").text();
+           
+           console.log(id);
+            $.ajax({
+                url: '/page/superuser/',
+                type: "PUT",
+                //dataType: "json",
+                data: JSON.stringify({ id: id, }),
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest5",
+                    "X-CSRFToken": getCookie("csrftoken"),
+                },
+                success: (data) => {
+                    //console.log(data)
+                    $('.form_crispy_reservation').empty();
+                    $(".reservation_info").empty();
+
+                    let x = '#reservation_id_' + $.trim(data.id);
+                     $(x).remove();
                 },
                 error: (error) => {
                     console.log(error);
@@ -252,7 +285,9 @@ superadmin
 <div class="not_approved_users" style="display:none">
     {% for user in users %}
     {% if user.profile.approval == 0 %}
+    {% if user.id != 1 %}
     <div onclick="select_user('{{user.id}}')" id="user_id_{{user.id}}">{{user.first_name}} {{user.last_name}}</div>
+    {%endif%}
     {%endif%}
     {% endfor %}
 </div>
@@ -267,7 +302,9 @@ reservations = reservations2
 </script> -->
 <div class="list_of_reservations" style="display:none">
     {% for r in  reservations %}
-    <div onclick="select_reservation('{{r.reservation_id}}')">  {{r.start_date}}</div>
+    {% if r.approved_status == 0 %}
+    <div onclick="select_reservation('{{r.reservation_id}}')" id="reservation_id_{{r.reservation_id}}"> {{r.lab_station}},  {{r.start_date|truncatechars:12 }}</div>
+    {%endif%}
     {% endfor %}
     
 </div>
@@ -275,15 +312,14 @@ reservations = reservations2
 
 {% block content %}
 <div class="more_reservation_info" >
-
+    <!-- <div class="buttons_reservations" style="display:none">
+    </div> -->
+    <div class="reservation_info"></div>
+    <div class="form_crispy_reservation"></div>
 
 
 </div>
-<div class="buttons_reservations" style="display:none">
-    
 
-</div>
-<div class="form_crispy_reservation"></div>
 
 
 <div class="more_user_info" >

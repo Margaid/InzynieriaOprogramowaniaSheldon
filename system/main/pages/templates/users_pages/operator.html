@@ -8,7 +8,24 @@
 }
 
 </style>
+<script>
+//  function reservation() {
+//             users = document.getElementsByClassName('not_approved_users')
+//             users[0].style.display = 'none'
+    
+//             users_info = document.getElementsByClassName('more_user_info')
+//             users_info[0].style.display = 'none'
+    
+//             reservations = document.getElementsByClassName('list_of_reservations')
+//             reservations[0].style.display = 'block'
+
+//             more_reservations=document.getElementsByClassName('more_reservation_info')
+//             more_reservations[0].style.display = 'block'
+//         }
+// </script>
     {% endblock %} 
+
+
 {% block content %}
 <form method="post">
     {% csrf_token %}
@@ -17,13 +34,10 @@
  <button type="submit" id="button_reservation">Wyślij</button>
 </form>
 
-<script>
-  $( function() {
-    $( "#reservation_date" ).datepicker();
-  });
-</script>
+
 {%endblock%}
 
 {% block icons %}
+<button >prośba</button>
 <button>stanowiska</button>
 {%endblock%}
