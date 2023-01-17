@@ -2,29 +2,55 @@
 {% block title %} user {%endblock%}
 {% block head %}
 <style>
-#button_reservation{
-    width:60px;
-    height: 20px;;
-}
-
+  #button_reservation {
+    width: 60px;
+    height: 20px;
+    ;
+  }
 </style>
-    {% endblock %} 
-{% block content %}
-<form method="post">
-    {% csrf_token %}
-    {{form.as_p}}
-
- <button type="submit" id="button_reservation">Wyślij</button>
-</form>
-
 <script>
-  $( function() {
-    $( "#reservation_date" ).datepicker();
-  });
+  // $(function () {
+  //   $("#reservation_date").datepicker();
+  // });
+  function stations_user() {
+            stations = document.getElementById('list_of_stations_user');
+            stations.style.display = 'block';
+            console.log("X")
+    
+        }
+
+
 </script>
+
+
+{% endblock %}
+{% block icons %}
+<button onclick="stations_user()">stanowiska</button>
+{%endblock%}
+
+
+{% block list %}
+<div id="list_of_stations_user" style="display:none">
+  {% for s in stations %}
+  <div onclick="select_station_user('{{s}}')" >{{s}}</div>
+  {%endfor%}
+</div>
 
 {%endblock%}
 
-{% block icons %}
-<button>stanowiska</button>
+
+
+
+{% block content %}
+<div id="form_reservation_user" style="display:none">
+<form method="post">
+  {% csrf_token %}
+  {{form.as_p}}
+
+  <button type="submit" id="button_reservation">Wyślij</button>
+</div>
+</form>
+
+
+
 {%endblock%}

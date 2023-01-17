@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from .decorators import user_required, operator_required, admin_required, superadmin_required
 from django.contrib.auth.models import User
 from register.models import Profile
-from .forms import ProfileForm_for_super_admin, ProfileForm_for_admin, ReservationForm_for_user, ReservationForm_for_operator, ReservationDataBase, Form_for_approval_buttons_reservations_superadmin
+from .forms import ProfileForm_for_super_admin, ProfileForm_for_admin, ReservationForm_for_user, ReservationForm_for_operator, ReservationDataBase, Form_for_approval_buttons_reservations_superadmin, Form_for_approval_buttons_reservations_admin
+from .models import LAB_STATIONS
 from django.http import JsonResponse
 import json
 from itertools import chain
@@ -30,6 +31,8 @@ def page(request):
 
 @user_required
 def user(response):
+    reservations = ReservationDataBase.objects.all()
+    stations= [c[1] for c in LAB_STATIONS]
     if response.method == 'POST':
         form = ReservationForm_for_user(response.POST)
         if form.is_valid():
@@ -38,7 +41,7 @@ def user(response):
             reservation.save()
     else:
         form = ReservationForm_for_user()
-    return render(response, 'users_pages/user.html', {'form': form})
+    return render(response, 'users_pages/user.html', {'form': form,'reservations':reservations,'stations':stations})
 
 
 # strona operatora
@@ -60,6 +63,7 @@ def operator(response):
 @admin_required
 def admin(request):
     users = User.objects.all()
+    reservations = ReservationDataBase.objects.all()
 
     # przekazanie niezatwierdzonych użytkowników
     is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
@@ -124,11 +128,58 @@ def admin(request):
 
             return JsonResponse({'id': id, })
         return JsonResponse({'status': 'Invalid request'}, status=400)
-    return render(request, 'users_pages/admin.html', {'users': users, })
+
+    # pokazywanie more info o rezerwacjach
+    is_ajax4 = request.headers.get('X-Requested-With') == 'XMLHttpRequest4'
+    if is_ajax4:
+        if request.method == 'GET':
+            id = request.GET.get("id", None)
+            if ReservationDataBase.objects.filter(reservation_id=id).exists():
+
+                reservations2 = ReservationDataBase.objects.get(
+                    reservation_id=id)
+                reservations = ReservationDataBase.objects.filter(
+                    reservation_id=id).values()
+                user = User.objects.filter(
+                    id=reservations2.user_id).values()
+                profile = Profile.objects.filter(
+                    id=reservations2.user_id).values()
+
+                data = {
+                    'reservation_id': id,
+                }
+
+                form = Form_for_approval_buttons_reservations_admin(
+                    initial=data)
+
+                ctx = {}
+                ctx.update(csrf(request))
+
+                form_html = render_crispy_form(form, context=ctx)
+
+                return JsonResponse({'context': list(reservations), 'user': list(chain(user, profile)), 'form': form_html})
+        return JsonResponse({'status': 'Invalid request'}, status=400)
+
+
+    # odrzucenie rezerwacji
+    is_ajax6 = request.headers.get('X-Requested-With') == 'XMLHttpRequest6'
+    if is_ajax6:
+        if request.method == 'PUT':
+            data = json.load(request)
+            id = data.get('id')
+            reservations = ReservationDataBase.objects.get(reservation_id=id)
+            reservations.approved_status = 2
+            reservations.save()
+
+            return JsonResponse({'id': id, })
+        return JsonResponse({'status': 'Invalid request'}, status=400)
+
+
+    return render(request, 'users_pages/admin.html', {'users': users, 'reservations':reservations})
+
+
 
 # strona superadmina
-
-
 @superadmin_required
 def superuser(request):
     users = User.objects.all()
@@ -198,7 +249,7 @@ def superuser(request):
             return JsonResponse({'id': id, })
         return JsonResponse({'status': 'Invalid request'}, status=400)
 
-    # pokazywanie mmore info o rezerwacjach
+    # pokazywanie more info o rezerwacjach
     is_ajax4 = request.headers.get('X-Requested-With') == 'XMLHttpRequest4'
     if is_ajax4:
         if request.method == 'GET':
