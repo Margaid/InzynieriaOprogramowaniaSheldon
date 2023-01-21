@@ -3,128 +3,182 @@
 
 {% block head %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script type="text/javascript">
+<script>
 
 
-        //wyświetlanie informacji dodatkowych o wybranym użytkowniku
-        function select_user_admin(id) {
-    
-    users_info = document.getElementsByClassName('more_user_info')
-    users_info[0].style.display = 'block'
+    //wyświetlanie informacji dodatkowych o wybranym użytkowniku
+    function select_user_admin(id) {
 
-    $.ajax({
-        url: '/page/admin/',
-        // headers: {"X-Requested-With": "XMLHttpRequest"},
-        type: "GET",
-        data: { "id": id },
-        success: (data) => {
-            console.log(data)
-            const user_info = $(".user_info");
-            user_info.empty();
-            user = data.context[0];
-            profile = data.context[1];
+        users_info = document.getElementsByClassName('more_user_info')
+        users_info[0].style.display = 'block'
 
-            //podstawowe informacje
-            const id=`<p class="id"> ${user.id}</p>`;
-            const username=`<p class="username"> ${user.username}</p>`;
-            const first_name = `<p class="first_name"> ${user.first_name}</p>`;
-            const last_name = `<p class="first_name"> ${user.last_name}</p>`;
-            
-            user_info.append(id);
-            user_info.append(username);
-            user_info.append(first_name);
-            user_info.append(last_name);
-             
-            //informacje o użytkowniku do zmiany w formularzu
-            $('.form_crispy').empty();
-            $('.form_crispy').html(data['form']);
-        },
-        error: (error) => {
-            console.log(error);
-        }
+        $.ajax({
+            url: '/page/admin/',
+            // headers: {"X-Requested-With": "XMLHttpRequest"},
+            type: "GET",
+            data: { "id": id },
+            success: (data) => {
+                console.log(data)
+                const user_info = $(".user_info");
+                user_info.empty();
+                user = data.context[0];
+                profile = data.context[1];
+
+                //podstawowe informacje
+                const id = `<p class="id"> ${user.id}</p>`;
+                const username = `<p class="username"> ${user.username}</p>`;
+                const first_name = `<p class="first_name"> ${user.first_name}</p>`;
+                const last_name = `<p class="first_name"> ${user.last_name}</p>`;
+
+                user_info.append(id);
+                user_info.append(username);
+                user_info.append(first_name);
+                user_info.append(last_name);
+
+                //informacje o użytkowniku do zmiany w formularzu
+                $('.form_crispy').empty();
+                $('.form_crispy').html(data['form']);
+            },
+            error: (error) => {
+                console.log(error);
+            }
+        });
+
+       
+
+
+
+    }
+
+
+    //więcej informacji odnosnie wybranej rezerwacji
+    function select_reservation_admin(id) {
+
+        //user_info = document.getElementsByClassName('more_user_info')
+        //user_info[0].style.display = 'none';
+        // more_reservations_info = document.getElementsByClassName('more_reservation_info')
+        // more_reservations_info[0].style.display = 'block'
+
+        // buttons_reservations = document.getElementsByClassName('buttons_reservations');
+        // buttons_reservations[0].style.display = 'block'
+
+        console.log("X");
+        $.ajax({
+            url: '/page/admin/',
+            headers: { "X-Requested-With": "XMLHttpRequest4" },
+            type: "GET",
+            data: { "id": id },
+            success: (data) => {
+                console.log(data)
+                const more_reservation_info = $(".reservation_info");
+                more_reservation_info.empty();
+                reservation_data = data.context[0];
+                user2 = data.user[1];
+                user = data.user[0];
+
+                const id = `<p class="reservation_id"> ${reservation_data.reservation_id}</p>`;
+
+                const first_name = `<p class="first_name"> ${user.first_name}</p>`;
+                const last_name = `<p class="first_name"> ${user.last_name}</p>`;
+                const email = `<p class="email"> ${user.email}</p>`;
+                const firm = `<p class="firm"> ${user2.firm}</p>`;
+                const start_date = `<p class="start_date"> ${reservation_data.start_date.substring(0, 10)}</p>`;
+                const end_date = `<p class="end_date"> ${reservation_data.end_date.substring(0, 10)}</p>`;
+
+                // console.log(email);
+                more_reservation_info.append(id);
+                more_reservation_info.append(email);
+                more_reservation_info.append(first_name);
+                more_reservation_info.append(last_name);
+                more_reservation_info.append(firm)
+                more_reservation_info.append(start_date)
+                more_reservation_info.append(end_date)
+
+
+                $('.form_crispy_reservation').empty();
+                $('.form_crispy_reservation').html(data['form']);
+            },
+            error: (error) => {
+                console.log(error);
+            }
+        });
+
+
+    }
+
+    //odrzucenie użytkownika
+    $(function () {
+        $(".form_crispy").on('click', '#disapproving_button', (e) => {
+            e.preventDefault();
+            var id = $(".id").text();
+
+            const formData = {
+                is_user: form_id.elements['id_is_user'].checked,
+                is_operator: form_id.elements['id_is_operator'].checked,
+                is_admin: form_id.elements['id_is_admin'].checked,
+                operator: form_id.elements['id_operator'].value,
+                id: id
+            }
+            console.log(formData);
+
+
+            $.ajax({
+                url: '/page/admin/',
+                type: "PUT",
+                //dataType: "json",
+                data: JSON.stringify({ formData: formData, }),
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest3",
+                    "X-CSRFToken": getCookie("csrftoken"),
+                },
+                success: (data) => {
+                    $('.form_crispy').empty();
+                    let x = '#user_id_' + $.trim(data.id);
+                    $(x).remove();
+                    $('.user_info').empty();
+                },
+                error: (error) => {
+                    console.log(error);
+                }
+            });
+        });
+
+
     });
 
-    //zatwierdzenie użytkownika
-    $(function () {
-            $(".form_crispy").on('click', '#approving_button', (e) => {
-                e.preventDefault();
-                var id = $(".id").text();
-    
-                const formData = {
-                    is_user: form_id.elements['id_is_user'].checked,
-                    is_operator: form_id.elements['id_is_operator'].checked,
-                    is_admin: form_id.elements['id_is_admin'].checked,
-                    operator: form_id.elements['id_operator'].value,
-                    id: id
+     //odrzucenie rezerwacji
+     $(function () {
+        $(".form_crispy_reservation").on('click', '#disapproving_button_reservation', (e) => {
+            e.preventDefault();
+            var id = $(".reservation_id").text();
+           
+           console.log(id);
+            $.ajax({
+                url: '/page/admin/',
+                type: "PUT",
+                //dataType: "json",
+                data: JSON.stringify({ id: id, }),
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest6",
+                    "X-CSRFToken": getCookie("csrftoken"),
+                },
+                success: (data) => {
+                    console.log(data)
+                    $('.form_crispy_reservation').empty();
+                    $(".reservation_info").empty();
+
+                    let x = '#reservation_id_admin_' + $.trim(data.id);
+                     $(x).remove();
+                },
+                error: (error) => {
+                    console.log(error);
                 }
-                console.log(formData);
-    
-    
-                $.ajax({
-                    url: '/page/admin/',
-                    type: "PUT",
-                    //dataType: "json",
-                    data: JSON.stringify({ formData: formData, }),
-                    headers: {
-                        "X-Requested-With": "XMLHttpRequest2",
-                        "X-CSRFToken": getCookie("csrftoken"),
-                    },
-                    success: (data) => {
-                        $('.form_crispy').empty();
-                        let x = '#user_id_' + $.trim(data.id);
-                        $(x).empty();
-                        $('.user_info').empty();
-                    },
-                    error: (error) => {
-                        console.log(error);
-                    }
-                });
             });
         });
-        //odrzucenie użytkownika
-        $(function () {
-            $(".form_crispy").on('click', '#disapproving_button', (e) => {
-                e.preventDefault();
-                var id = $(".id").text();
-    
-                const formData = {
-                    is_user: form_id.elements['id_is_user'].checked,
-                    is_operator: form_id.elements['id_is_operator'].checked,
-                    is_admin: form_id.elements['id_is_admin'].checked,
-                    operator: form_id.elements['id_operator'].value,
-                    id: id
-                }
-                console.log(formData);
-    
-    
-                $.ajax({
-                    url: '/page/admin/',
-                    type: "PUT",
-                    //dataType: "json",
-                    data: JSON.stringify({ formData: formData, }),
-                    headers: {
-                        "X-Requested-With": "XMLHttpRequest3",
-                        "X-CSRFToken": getCookie("csrftoken"),
-                    },
-                    success: (data) => {
-                        $('.form_crispy').empty();
-                        let x = '#user_id_' + $.trim(data.id);
-                        $(x).empty();
-                        $('.user_info').empty();
-                    },
-                    error: (error) => {
-                        console.log(error);
-                    }
-                });
-            });
-    
-    
-        });
-}
+    });
 
+</script>
 
-    </script>
-</script> 
 {%endblock%}
 
 
@@ -145,7 +199,10 @@ admin
 <div class="not_approved_users" style="display:none">
     {% for user in users %}
     {% if user.profile.approval == 0 %}
-    <div onclick="select_user_admin('{{user.id}}')" id="user_id_{{user.id}}">{{user.first_name}} {{user.last_name}}</div>
+    {% if user.id != 1 %}
+    <div onclick="select_user_admin('{{user.id}}')" id="user_id_{{user.id}}">{{user.first_name}} {{user.last_name}}
+    </div>
+    {%endif%}
     {%endif%}
     {% endfor %}
 </div>
@@ -154,8 +211,11 @@ admin
 
 <!--lista rezerwacji-->
 <div class="list_of_reservations" style="display:none">
-    {% for user in users %}
-    <li>{{user.profile}}</li>
+    {% for r in reservations %}
+    {% if r.approved_status == 0 %}
+    <div onclick="select_reservation_admin('{{r.reservation_id}}')" id="reservation_id_admin_{{r.reservation_id}}">
+        {{r.lab_station}}, {{r.start_date|truncatechars:12 }}</div>
+    {%endif%}
     {% endfor %}
 </div>
 {%endblock%}
@@ -163,16 +223,23 @@ admin
 {% block content %}
 <div class="more_user_info">
 
-<div class="user_info">
+    <div class="user_info">
+
+
+    </div>
+
+
+    <div class="form_crispy">
+
+
+    </div>
+</div>
+
+<div class="more_reservation_info">
+    <div class="reservation_info"></div>
+    <div class="form_crispy_reservation"></div>
 
 
 </div>
 
-
-<div class="form_crispy">
-    
-
-</div>
-</div>
 {%endblock%}
-

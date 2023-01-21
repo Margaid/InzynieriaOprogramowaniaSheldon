@@ -1,7 +1,54 @@
 {%extends "base/base.html"%}
 {% block title %} operator {%endblock%}
+{% block head %}
+<style>
+#button_reservation{
+    width:60px;
+    height: 20px;;
+}
+
+</style>
+<script>
+ function prosby_o_rezerwacje() {
+            users = document.getElementsByClassName('not_approved_users')
+            users[0].style.display = 'none'
+    
+            
+        }
+</script>
+    {% endblock %} 
+
+    {% block icons %}
+    <button onclick="prosby_o_rezerwacje()">prośba</button>
+    <button onclick="rezerwacja_operatora()">rezerwacja</button>
+    {%endblock%}
+
+    {% block list %}
+    <div id="list_of_reservations_operator"></div>
+    <div id="reservation_operator"></div>
+    {%endblock%}
+
+
+
 {% block content %}
-operator
-   
+
+
+<div id="more_reservation_info_operator">
+
+<div id="reservation_info_operator"></div>
+<div id="form_crispy_operator"></div>
+</div>
+
+
+<div id="form_for_operator">
+<form method="post">
+    {% csrf_token %}
+    {{form.as_p}}
+
+ <button type="submit" id="button_reservation">Wyślij</button>
+</form>
+</div>
 
 {%endblock%}
+
+
