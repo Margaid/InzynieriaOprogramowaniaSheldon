@@ -54,6 +54,14 @@
         .not_approved_users div {
             background-color: indianred;
             text-align: center;
+            border: 0.5px solid #000000;
+        }
+
+        .list_of_reservations div{
+            background-color: indianred;
+            text-align: center;
+            border: 0.5px solid #000000;
+            
         }
     </style> 
 
@@ -71,6 +79,7 @@
     
             reservations = document.getElementsByClassName('list_of_reservations')
             reservations[0].style.display = 'block'
+
         }
     
         //wyświetlenie listy użytkowników do zatwierdzenia
@@ -81,6 +90,9 @@
             
             reservations = document.getElementsByClassName('list_of_reservations')
             reservations[0].style.display = 'none'
+
+            more_reservations=document.getElementsByClassName('more_reservation_info')
+            more_reservations[0].style.display = 'none'
         }
     
     
