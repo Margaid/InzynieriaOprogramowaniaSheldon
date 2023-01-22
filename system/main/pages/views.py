@@ -3,7 +3,7 @@ from .decorators import user_required, operator_required, admin_required, supera
 from django.contrib.auth.models import User
 from register.models import Profile
 from .forms import ProfileForm_for_super_admin, ProfileForm_for_admin, ReservationForm_for_user, ReservationForm_for_operator, ReservationDataBase, Form_for_approval_buttons_reservations_superadmin, Form_for_approval_buttons_reservations_admin
-from .models import LAB_STATIONS
+from .models import LAB_STATIONS, ReservationDataBase
 from django.http import JsonResponse
 import json
 from itertools import chain
@@ -30,18 +30,69 @@ def page(request):
 
 
 @user_required
-def user(response):
+def user(request):
     reservations = ReservationDataBase.objects.all()
     stations= [c[1] for c in LAB_STATIONS]
-    if response.method == 'POST':
-        form = ReservationForm_for_user(response.POST)
+
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+    if is_ajax:
+        if request.method == 'GET':
+            lab = request.GET.get("lab", None)
+            if lab in stations:
+                # pola do zmiany przy zatwierdzeniu/odrzuceniu
+               # user2 = User.objects.get(id=id)
+                data = {
+                    'lab_station': lab,
+                }
+                form = ReservationForm_for_user(initial=data, instance=request.user)
+                ctx = {}
+                ctx.update(csrf(request))
+
+                form_html = render_crispy_form(form, context=ctx)
+                return JsonResponse({'form': form_html,'lab':lab})
+        return JsonResponse({'status': 'Invalid request'}, status=400)
+
+    # przesłanie rezerwacji
+    is_ajax2 = request.headers.get('X-Requested-With') == 'XMLHttpRequest2'
+    if is_ajax2:
+        if request.method == 'PUT':
+            data = json.load(request)
+            form_values = data.get('formData')
+            lab = [c[0] for c in LAB_STATIONS if c[1]==form_values['lab_station']][0]
+
+            #ReservationDataBase.objects.create(name="test2")
+            #reservation.name="test"
+            # reservation = form.save(commit=False)
+            reservation=ReservationDataBase()
+            reservation.user=request.user
+            reservation.lab_station=lab
+            reservation.start_date=form_values['start_date']
+            reservation.end_date=form_values['end_date']
+            reservation.operator=form_values['operator']
+            reservation.save()
+
+
+            # user = User.objects.get(id=id)
+            # user.profile.is_user = updated_values['is_user']
+            # user.profile.is_operator = updated_values['is_operator']
+            # user.profile.is_admin = updated_values['is_admin']
+            # user.profile.operator = updated_values['operator']
+            # user.profile.approval = 1
+            # user.save()
+
+            return JsonResponse({'lab': lab, })
+        return JsonResponse({'status': 'Invalid request'}, status=400)
+
+
+    if request.method == 'POST':
+        form = ReservationForm_for_user(request.POST)
         if form.is_valid():
             reservation = form.save(commit=False)
-            reservation.user = response.user
+            reservation.user = request.user
             reservation.save()
     else:
         form = ReservationForm_for_user()
-    return render(response, 'users_pages/user.html', {'form': form,'reservations':reservations,'stations':stations})
+    return render(request, 'users_pages/user.html', {'form': form,'reservations':reservations,'stations':stations})
 
 
 # strona operatora

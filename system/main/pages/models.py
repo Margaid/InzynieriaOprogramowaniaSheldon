@@ -13,7 +13,7 @@ LAB_STATIONS = (
 
 
 class ReservationDataBase(models.Model):
-    lab_station = models.CharField(max_length=100)
+    lab_station = models.CharField(max_length=100,choices=LAB_STATIONS)
     reservation_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     # lab_station_id = models.IntegerField()
@@ -28,7 +28,7 @@ class ReservationDataBase(models.Model):
         (REJECTED, ('odrzucona rezerwacja'))
     )
     approved_status = models.PositiveSmallIntegerField(
-        choices=STATUS, default=NOT_APPROVED)  # zrobione
+        choices=STATUS, default=NOT_APPROVED) 
     # reservation_date = models.DateTimeField()
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()

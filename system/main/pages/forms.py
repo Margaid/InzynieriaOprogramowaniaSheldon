@@ -48,11 +48,12 @@ class ReservationForm_for_user(forms.ModelForm):
     operator = forms.ChoiceField(choices=OPERATORS, required=False, label='Operator',
                                  #  widget=forms.CheckboxSelectMultiple
                                  )
-    lab_station = forms.ChoiceField(
-        choices=LAB_STATIONS, required=False, label='Sala')
+   # lab_station = forms.ChoiceField(
+   #     choices=LAB_STATIONS, required=False, label='Sala')
     start_date = forms.DateField(
-        widget=forms.DateInput(attrs={'type': 'date'}))
-    end_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+        widget=forms.DateInput(attrs={'type': 'date'}),required=True, label="Początkowa data")
+    end_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}),required=True,
+    label="Końcowa data")
 
     def clean(self):
         cleaned_data = super().clean()
@@ -67,10 +68,22 @@ class ReservationForm_for_user(forms.ModelForm):
                 raise forms.ValidationError(
                     "Start date should be later than or equal to today.")
 
+
+    # crispy form
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_id = "form_id_reservation_user"
+        self.helper.layout = Layout(
+            'start_date',
+            'end_date',
+            'operator',
+            Submit('submit', 'Prześlij', css_id="reservation_send_button"),
+            
+        )
     class Meta:
         model = ReservationDataBase
-        fields = ['lab_station',
-                  'start_date', 'end_date', 'operator']
+        fields = ['start_date', 'end_date', 'operator']
 
 
 class ReservationForm_for_operator(forms.ModelForm):

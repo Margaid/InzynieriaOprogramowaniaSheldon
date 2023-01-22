@@ -13,11 +13,79 @@
   //   $("#reservation_date").datepicker();
   // });
   function stations_user() {
-            stations = document.getElementById('list_of_stations_user');
-            stations.style.display = 'block';
-            console.log("X")
-    
+    stations = document.getElementById('list_of_stations_user');
+    stations.style.display = 'block';
+
+
+  }
+
+  //wyświetlanie formularza rezerwacji dla odpowiedniej sali
+  function select_station_user(lab) {
+
+    form_station = document.getElementById('form_reservation_user')
+    //console.log(users_info.style)
+    form_station.style.display = 'block';
+    //console.log(users_info.style)
+    $.ajax({
+      url: '/page/user/',
+      headers: { "X-Requested-With": "XMLHttpRequest" },
+      type: "GET",
+      data: { "lab": lab },
+      success: (data) => {
+        console.log(data)
+        const form = $("#form_reservation_user");
+        form.empty();
+
+        const selected_lab = `<p class="selected_lab"> ${data['lab']}</p>`;
+
+        form.append(selected_lab);
+        //wyświetlenie formularza rezerwacji
+        form.append(data['form']);
+
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    });
+  }
+
+  //przesyłanie formularza rezerwacji - dokonanie rezerwacji
+  $(function () {
+    $("#form_reservation_user").on('click', '#reservation_send_button', (e) => {
+      e.preventDefault();
+
+      var lab = $(".selected_lab").text();
+      var lab = $.trim(lab);
+      const formData = {
+        start_date: form_id_reservation_user.elements['start_date'].value,
+        end_date: form_id_reservation_user.elements['end_date'].value,
+        operator: form_id_reservation_user.elements['operator'].value,
+        lab_station: lab
+      }
+
+
+      $.ajax({
+        url: '/page/user/',
+        type: "PUT",
+        //dataType: "json",
+        data: JSON.stringify({ formData: formData }),
+        headers: {
+          "X-Requested-With": "XMLHttpRequest2",
+          "X-CSRFToken": getCookie("csrftoken"),
+        },
+        success: (data) => {
+          console.log(data)
+          $("#form_reservation_user").empty();
+        },
+        error: (error) => {
+          console.log(error);
         }
+      });
+    });
+  });
+
+
+
 
 
 </script>
@@ -32,7 +100,7 @@
 {% block list %}
 <div id="list_of_stations_user" style="display:none">
   {% for s in stations %}
-  <div onclick="select_station_user('{{s}}')" >{{s}}</div>
+  <div onclick="select_station_user('{{s}}')">{{s}}</div>
   {%endfor%}
 </div>
 
@@ -43,14 +111,19 @@
 
 {% block content %}
 <div id="form_reservation_user" style="display:none">
-<form method="post">
-  {% csrf_token %}
-  {{form.as_p}}
 
-  <button type="submit" id="button_reservation">Wyślij</button>
+
+
+
 </div>
-</form>
 
 
 
+
+{%endblock%}
+
+
+
+{% block usertype %}
+użytkownik
 {%endblock%}
