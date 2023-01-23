@@ -29,6 +29,10 @@ class ReservationDataBase(models.Model):
     )
     approved_status = models.PositiveSmallIntegerField(
         choices=STATUS, default=NOT_APPROVED) 
+
+    approved_status_operator=models.PositiveSmallIntegerField(
+        choices=STATUS, default=NOT_APPROVED)
+
     # reservation_date = models.DateTimeField()
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()

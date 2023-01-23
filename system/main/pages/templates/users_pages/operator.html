@@ -2,31 +2,161 @@
 {% block title %} operator {%endblock%}
 {% block head %}
 <style>
-#button_reservation{
-    width:60px;
-    height: 20px;;
-}
-
+    #button_reservation {
+        width: 60px;
+        height: 20px;
+        ;
+    }
 </style>
 <script>
- function prosby_o_rezerwacje() {
-            users = document.getElementsByClassName('not_approved_users')
-            users[0].style.display = 'none'
-    
-            
-        }
+    function prosby_o_rezerwacje() {
+        reservations = document.getElementById('list_of_reservations_operator')
+        reservations.style.display = 'block'
+
+
+    }
+
+    function select_reservation_operator(id) {
+
+        //user_info = document.getElementsByClassName('more_user_info')
+        //user_info[0].style.display = 'none';
+        more_reservations_info = document.getElementById('more_reservation_info_operator')
+        more_reservations_info.style.display = 'block'
+
+        // buttons_reservations = document.getElementsByClassName('buttons_reservations');
+        // buttons_reservations[0].style.display = 'block'
+
+        console.log("X");
+        $.ajax({
+            url: '/page/operator/',
+            headers: { "X-Requested-With": "XMLHttpRequest4" },
+            type: "GET",
+            data: { "id": id },
+            success: (data) => {
+                console.log(data)
+                const more_reservation_info = $("#reservation_info_operator");
+                more_reservation_info.empty();
+                reservation_data = data.context[0];
+                user2 = data.user[1];
+                user = data.user[0];
+
+                const id = `<p class="reservation_id"> ${reservation_data.reservation_id}</p>`;
+
+                const first_name = `<p class="first_name"> ${user.first_name}</p>`;
+                const last_name = `<p class="first_name"> ${user.last_name}</p>`;
+                const email = `<p class="email"> ${user.email}</p>`;
+                const firm = `<p class="firm"> ${user2.firm}</p>`;
+                const start_date = `<p class="start_date"> ${reservation_data.start_date.substring(0, 10)}</p>`;
+                const end_date = `<p class="end_date"> ${reservation_data.end_date.substring(0, 10)}</p>`;
+
+                // console.log(email);
+                more_reservation_info.append(id);
+                more_reservation_info.append(email);
+                more_reservation_info.append(first_name);
+                more_reservation_info.append(last_name);
+                more_reservation_info.append(firm)
+                more_reservation_info.append(start_date)
+                more_reservation_info.append(end_date)
+
+                // informacje o użytkowniku do zmiany w formularzu
+                $('#form_crispy_approving_operator').empty();
+                $('#form_crispy_approving_operator').html(data['form']);
+            },
+            error: (error) => {
+                console.log(error);
+            }
+        });
+
+
+    }
+
+
+    //zatwierdzenie rezerwacji
+    $(function () {
+        $("#form_crispy_approving_operator").on('click', '#approving_button_reservation', (e) => {
+            e.preventDefault();
+            var id = $(".reservation_id").text();
+
+            console.log(id);
+            $.ajax({
+                url: '/page/operator/',
+                type: "PUT",
+                //dataType: "json",
+                data: JSON.stringify({ id: id, }),
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest5",
+                    "X-CSRFToken": getCookie("csrftoken"),
+                },
+                success: (data) => {
+                    console.log(data)
+                    $('.form_crispy_reservation_operator').empty();
+                    $(".reservation_info_operator").empty();
+                    let x = '#reservation_id_' + $.trim(data.id);
+                    $(x).remove();
+
+                },
+                error: (error) => {
+                    console.log(error);
+                }
+            });
+        });
+    });
+
+    //odrzucenie rezerwacji
+    $(function () {
+        $("#form_crispy_approving_operator").on('click', '#disapproving_button_reservation', (e) => {
+            e.preventDefault();
+            var id = $(".reservation_id").text();
+
+            console.log(id);
+            $.ajax({
+                url: '/page/operator/',
+                type: "PUT",
+                //dataType: "json",
+                data: JSON.stringify({ id: id, }),
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest6",
+                    "X-CSRFToken": getCookie("csrftoken"),
+                },
+                success: (data) => {
+                    //console.log(data)
+                    $('#form_crispy_approving_operator').empty();
+                    $("#reservation_info_operator").empty();
+
+                    let x = '#reservation_id_' + $.trim(data.id);
+                    $(x).remove();
+                },
+                error: (error) => {
+                    console.log(error);
+                }
+            });
+        });
+    });
+
+
+
 </script>
-    {% endblock %} 
+{% endblock %}
 
-    {% block icons %}
-    <button onclick="prosby_o_rezerwacje()">prośba</button>
-    <button onclick="rezerwacja_operatora()">rezerwacja</button>
-    {%endblock%}
+{% block icons %}
+<button onclick="prosby_o_rezerwacje()">prośba</button>
+<button onclick="rezerwacja_operatora()">rezerwacja</button>
+{%endblock%}
 
-    {% block list %}
-    <div id="list_of_reservations_operator"></div>
-    <div id="reservation_operator"></div>
-    {%endblock%}
+{% block list %}
+<div id="list_of_reservations_operator" style="display:none">
+    {% for r in reservations %}
+    {% if r.operator and r.approved_status_operator == 0 %}
+    <div onclick="select_reservation_operator('{{r.reservation_id}}')"
+        id="reservation_operator_id_{{r.reservation_id}}"> {{r.lab_station}}, {{r.start_date|truncatechars:12 }}</div>
+    {%endif%}
+    {% endfor %}
+
+
+
+</div>
+<div id="reservation_operator"></div>
+{%endblock%}
 
 
 
@@ -35,20 +165,22 @@
 
 <div id="more_reservation_info_operator">
 
-<div id="reservation_info_operator"></div>
-<div id="form_crispy_operator"></div>
+    <div id="reservation_info_operator"></div>
+    <div id="form_crispy_approving_operator"></div>
 </div>
 
 
-<div id="form_for_operator">
+<!-- <div id="form_for_operator">
 <form method="post">
     {% csrf_token %}
     {{form.as_p}}
 
  <button type="submit" id="button_reservation">Wyślij</button>
 </form>
-</div>
+</div> -->
 
 {%endblock%}
 
-
+{% block usertype %}
+operator
+{%endblock%}
