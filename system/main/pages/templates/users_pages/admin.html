@@ -1,5 +1,5 @@
 {%extends "base/base.html"%}
-{% block title %} admin {%endblock%}
+{% block title %} Strona Admina {%endblock%}
 
 {% block head %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -184,14 +184,14 @@
 
 {% block icons %}
 <!-- przyciski wyboru -->
-<button onclick="reservation()">rezerwacja</button>
-<button onclick="approving_users()">dodanie</button>
+<button onclick="reservation()">Rezerwacja Stanowiska</button>
+<button onclick="approving_users()">Dodanie Uzytkownika</button>
 
 {%endblock%}
 
 
 {% block usertype %}
-admin
+<h1 class="logo">ADMIN</h1>
 {%endblock%}
 
 {%block list%}

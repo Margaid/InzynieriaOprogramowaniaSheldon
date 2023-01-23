@@ -1,11 +1,28 @@
 {%extends "base/base.html"%}
-{% block title %} operator {%endblock%}
+{% block title %} Strona Operatora Stanowiska {%endblock%}
 {% block head %}
 <style>
     #button_reservation {
         width: 60px;
         height: 20px;
         ;
+    }
+
+    .list_of div{
+        font-family: 'Roboto', sans-serif;
+        font-style: Regular;
+        color: #1A831A;
+        font-size: 20px;
+        line-height: 100%;
+        text-align: center;
+        vertical-align: Center;
+        letter-spacing: 3%;
+        border-radius: 20px;
+        height:4%;
+        width:100%;
+        background-color: #BBC7DF;
+        border: 0.5px solid #000000;
+        
     }
 
 
@@ -226,12 +243,12 @@
 {% endblock %}
 
 {% block icons %}
-<button onclick="prosby_o_rezerwacje()">prośba</button>
-<button onclick="rezerwacja_operatora()">rezerwacja</button>
+<button onclick="prosby_o_rezerwacje()">Potwierdzenie rezerwacji</button>
+<button onclick="rezerwacja_operatora()">Rezerwacja Stanowiska</button>
 {%endblock%}
 
 {% block list %}
-<div id="list_of_reservations_operator" style="display:none">
+<div class="list_of" id="list_of_reservations_operator" style="display:none">
     {% for r in reservations %}
     {% if r.operator and r.approved_status_operator == 0 %}
     <div onclick="select_reservation_operator('{{r.reservation_id}}')"
@@ -242,7 +259,7 @@
 
 
 </div>
-<div id="reservation_operator" style="display:none">
+<div class="list_of" id="reservation_operator" style="display:none">
     {% for s in stations %}
     <div onclick="select_station_operator('{{s}}')">{{s}}</div>
     {%endfor%}
@@ -281,5 +298,5 @@
 {%endblock%}
 
 {% block usertype %}
-operator
+<h1 class="logo">OPERATOR</h1>
 {%endblock%}

@@ -1,5 +1,5 @@
 {%extends "base/base.html"%}
-{% block title %} Uzytkownik {%endblock%}
+{% block title %} Strona Uzytkownika {%endblock%}
 {% block head %}
 <style>
   #button_reservation {
@@ -7,6 +7,23 @@
     height: 20px;
     ;
   }
+
+  .list_of_stanowiska div{
+    font-family: 'Roboto', sans-serif;
+    font-style: Regular;
+    color: #1A831A;
+    font-size: 20px;
+    line-height: 100%;
+    text-align: center;
+    vertical-align: Center;
+    letter-spacing: 3%;
+    border-radius: 20px;
+    height:4%;
+    width:100%;
+    background-color: #BBC7DF;
+    border: 0.5px solid #000000;
+    
+}
 </style>
 <script>
   // $(function () {
@@ -15,7 +32,6 @@
   function stations_user() {
     stations = document.getElementById('list_of_stations_user');
     stations.style.display = 'block';
-
 
   }
 
@@ -93,12 +109,12 @@
 
 {% endblock %}
 {% block icons %}
-<button onclick="stations_user()">stanowiska</button>
+<button onclick="stations_user()">Rezerwacja Stanowiska</button>
 {%endblock%}
 
 
 {% block list %}
-<div id="list_of_stations_user" style="display:none">
+<div id="list_of_stations_user" style="display:none" class="list_of_stanowiska">
   {% for s in stations %}
   <div onclick="select_station_user('{{s}}')">{{s}}</div>
   {%endfor%}
