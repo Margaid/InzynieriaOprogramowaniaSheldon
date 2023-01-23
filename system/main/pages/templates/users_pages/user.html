@@ -5,8 +5,38 @@
   #button_reservation {
     width: 60px;
     height: 20px;
-    ;
+    
   }
+
+  .selected_lab{
+    font-family: 'Roboto', sans-serif;
+    font-style: Regular;
+    color: #0E4714;
+    font-size: 20px;
+}
+
+.form-select{
+  width: 40%;
+}
+
+.form-label{
+    font-family: 'Roboto', sans-serif;
+    font-style: Regular;
+    color: #0E4714;
+    font-size: 20px;
+}
+.form-control{
+    width: 40%;
+}
+
+.center{
+  width: 1000px;
+  height: 1000px;
+  position: absolute;
+  top: 15%;
+  left: 40%;
+  margin: -50px 0 0 -50px;
+}
 
   .list_of_stanowiska div{
     font-family: 'Roboto', sans-serif;
@@ -17,11 +47,11 @@
     text-align: center;
     vertical-align: Center;
     letter-spacing: 3%;
-    border-radius: 20px;
+    border-radius: 10px;
     height:4%;
     width:100%;
     background-color: #BBC7DF;
-    border: 0.5px solid #000000;
+    border: 0.5px solid #1A831A;
     
 }
 </style>
@@ -126,7 +156,7 @@
 
 
 {% block content %}
-<div id="form_reservation_user" style="display:none">
+<div class="center" id="form_reservation_user" style="display:none">
 
 
 

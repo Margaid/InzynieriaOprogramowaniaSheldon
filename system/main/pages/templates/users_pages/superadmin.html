@@ -2,6 +2,168 @@
 {% block title %} Strona Głównego Admina {%endblock%}
 
 {% block head %}
+<style>
+
+    .not_approved_users div{
+        font-family: 'Roboto', sans-serif;
+        font-style: Regular;
+        color: #1A831A;
+        font-size: 20px;
+        text-align: Center;
+        vertical-align: Center;
+        letter-spacing: 3%;
+        border-radius: 10px;
+        height:5%;
+        width:100%;
+        background-color: #BBC7DF;
+        border: 0.5px solid #1A831A;
+        
+    }
+    .center{
+        width: 1000px;
+        height: 1000px;
+        position: absolute;
+        top: 15%;
+        left: 40%;
+        margin: -50px 0 0 -50px;
+    }
+
+    .form-select{
+        width: 40%;
+    }
+
+    .form-control{
+        width:40%;
+    }
+    .id{
+        font-family: 'Roboto', sans-serif;
+        font-style: Regular;
+        color: #0E4714;
+        font-size: 20px;
+        line-height: 100%;
+        text-align: center;
+        vertical-align: Center;
+        letter-spacing: 3%;
+        border-radius: 20px;
+        height:4%;
+        width:40%;
+        background-color: #CCDFFF;
+        
+    }
+    .mb-3{
+        font-family: 'Roboto', sans-serif;
+        font-style: Regular;
+        color: #0E4714;
+        font-size: 20px;
+    }
+
+    .username{
+        font-family: 'Roboto', sans-serif;
+        font-style: Regular;
+        color: #0E4714;
+        font-size: 20px;
+        line-height: 100%;
+        text-align: center;
+        vertical-align: Center;
+        letter-spacing: 3%;
+        border-radius: 20px;
+        height:4%;
+        width:40%;
+        background-color: #CCDFFF;
+        
+    }
+    .end_date{
+        font-family: 'Roboto', sans-serif;
+        font-style: Regular;
+        color: #0E4714;
+        font-size: 20px;
+        line-height: 100%;
+        text-align: center;
+        vertical-align: Center;
+        letter-spacing: 3%;
+        border-radius: 20px;
+        height:4%;
+        width:40%;
+        background-color: #CCDFFF;
+        
+    }
+    .start_date{
+        font-family: 'Roboto', sans-serif;
+        font-style: Regular;
+        color: #0E4714;
+        font-size: 20px;
+        line-height: 100%;
+        text-align: center;
+        vertical-align: Center;
+        letter-spacing: 3%;
+        border-radius: 20px;
+        height:4%;
+        width:40%;
+        background-color: #CCDFFF;
+        
+    }
+    .reservation_id{
+        font-family: 'Roboto', sans-serif;
+        font-style: Regular;
+        color: #0E4714;
+        font-size: 20px;
+        line-height: 100%;
+        text-align: center;
+        vertical-align: Center;
+        letter-spacing: 3%;
+        border-radius: 20px;
+        height:4%;
+        width:40%;
+        background-color: #CCDFFF;
+        
+    }
+
+    .firm{
+        font-family: 'Roboto', sans-serif;
+        font-style: Regular;
+        color: #0E4714;
+        font-size: 20px;
+        line-height: 100%;
+        text-align: center;
+        vertical-align: Center;
+        letter-spacing: 3%;
+        border-radius: 20px;
+        height:4%;
+        width:40%;
+        background-color: #CCDFFF;
+        
+    }
+    .email{
+        font-family: 'Roboto', sans-serif;
+        font-style: Regular;
+        color: #0E4714;
+        font-size: 20px;
+        line-height: 100%;
+        text-align: center;
+        vertical-align: Center;
+        letter-spacing: 3%;
+        border-radius: 20px;
+        height:4%;
+        width:40%;
+        background-color: #CCDFFF;
+       
+    }
+    .first_name {
+        font-family: 'Roboto', sans-serif;
+        font-style: Regular;
+        color: #0E4714;
+        font-size: 20px;
+        line-height: 100%;
+        text-align: center;
+        vertical-align: Center;
+        letter-spacing: 3%;
+        border-radius: 20px;
+        height:4%;
+        width:40%;
+        background-color: #CCDFFF;
+        
+    }
+</style>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript">
@@ -292,7 +454,7 @@ reservations = reservations2
 {%endblock%}
 
 {% block content %}
-<div class="more_reservation_info">
+<div class="more_reservation_info center">
     <!-- <div class="buttons_reservations" style="display:none">
     </div> -->
     <div class="reservation_info"></div>
@@ -303,7 +465,7 @@ reservations = reservations2
 
 
 
-<div class="more_user_info">
+<div class="more_user_info center">
 
     <div class="user_info">
 
