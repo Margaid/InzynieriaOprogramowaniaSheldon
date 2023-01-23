@@ -1,20 +1,24 @@
 {%extends "home/base.html"%}
+{% load static%}
 {% block title %}Zaloguj się  {%endblock%}
 {% block content %}
-     <div>
-        
-     </div>   
-
-    <div> 
-        <h2>Zaloguj się</h2>
+    <div class="formularzRejestracja"> 
+        <h2 class="utworzNoweKonto">Zaloguj się</h2>
         <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Zaloguj się</button>
-        <p>Nie masz konta? <button onclick="location.href = '/register'">Zarejestruj się</button></p>
+        <button class="zalogujSieLogin" type="submit">Zaloguj się</button>
+        <p class="utworzNoweKonto">Nie masz konta?  <br>
+            <button class="zalKontoRejestracja" onclick="location.href = '/register'"/>Załóż konto</button></p>
         </form>
     
-</div>   
+    </div>  
+    
+    <div class="registerIMG">
+        <div>
+            <img <img src="{% static 'media/zalogujSie.png' %}" height=800px width=800px/>
+        </div>
+    </div>
 
 {%endblock%}
 

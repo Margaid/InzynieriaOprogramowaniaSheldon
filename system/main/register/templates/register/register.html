@@ -1,25 +1,32 @@
 {%extends "home/base.html"%}
+{% load static%}
 {% block title %}Zarejestruj sie  {%endblock%}
 {% block content %}
      <div>
-        <button onclick="location.href = '/login'">Zaloguj się</button>
+        <button  class = "zalogujSie" onclick="location.href = '/login'">Zaloguj się</button>
      </div>   
 
-    <div> 
-        <h3>Utwórz nowe konto</h3>
-    <form method="post">
-        <!--formularze rejestracji-->
-    {% csrf_token %}
-    {{ form.as_p }}
-    <div >
-        {{ p_reg_form.firm }}
+    <div class="formularzRejestracja"> 
+        <h3 class="utworzNoweKonto">Utwórz nowe konto</h3>
+            <form method="post">
+                <!--formularze rejestracji-->
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div >
+                    {{ p_reg_form.firm }}
+                </div>
+                <div >
+                    {{ p_reg_form.rodo }}
+                    <label><a href="/register/rodo">RODO</a></label>
+                </div>
+                <button class="zalKontoRejestracja"type="submit">Załóż konto</button>
+            </form>
+    </div>   
+
+    <div class="registerIMG">
+        <div>
+            <img <img src="{% static 'media/zalozKonto.png' %}" height=800px width=800px/>
+        </div>
     </div>
-    <div >
-        {{ p_reg_form.rodo }}
-        <label><a href="/register/rodo">RODO</a></label>
-    </div>
-    <button type="submit">Załóż konto</button>
-    </form>
-</div>   
 
 {%endblock%}

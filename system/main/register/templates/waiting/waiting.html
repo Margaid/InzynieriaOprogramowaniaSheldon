@@ -1,11 +1,16 @@
 {%extends "home/base.html"%}
 {% load static%}
-{% block title %}Czekaj {%endblock%}
+{% block title %} Twoje konto oczekuje na zatwierdzenie {%endblock%}
 {% block content %}
 <div>
   <button class = "zalogujSie" onclick="location.href = '/login'">Zaloguj się</button>
   <button class ="zalKonto" onclick="location.href = '/register'">Załóż konto</button>
 </div>
+
+<div class="downWaiting">
+  <h1 class="oczekiwanie"> Twoje konto oczekuje na zatwierdzenie.</h1>
+</div>
+
 
 {%block body%}
     <div>
