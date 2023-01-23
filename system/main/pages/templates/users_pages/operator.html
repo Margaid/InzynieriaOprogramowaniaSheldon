@@ -7,12 +7,21 @@
         height: 20px;
         ;
     }
+
+
 </style>
 <script>
     function prosby_o_rezerwacje() {
+        //pokazanie listy rezerwacji do zatwierdzenia
         reservations = document.getElementById('list_of_reservations_operator')
         reservations.style.display = 'block'
 
+        //zniknięcie listy z salami do rezerwacji
+        reservation = document.getElementById('reservation_operator')
+        reservation.style.display = 'none'
+        //zniknięcie formularza rezerwacji
+        reservation = document.getElementById('form_reservation_operator')
+        reservation.style.display = 'none'
 
     }
 
@@ -23,10 +32,11 @@
         more_reservations_info = document.getElementById('more_reservation_info_operator')
         more_reservations_info.style.display = 'block'
 
+
+
         // buttons_reservations = document.getElementsByClassName('buttons_reservations');
         // buttons_reservations[0].style.display = 'block'
 
-        console.log("X");
         $.ajax({
             url: '/page/operator/',
             headers: { "X-Requested-With": "XMLHttpRequest4" },
@@ -89,9 +99,9 @@
                 },
                 success: (data) => {
                     console.log(data)
-                    $('.form_crispy_reservation_operator').empty();
-                    $(".reservation_info_operator").empty();
-                    let x = '#reservation_id_' + $.trim(data.id);
+                    $('#form_crispy_approving_operator').empty();
+                    $("#reservation_info_operator").empty();
+                    let x = '#reservation_operator_id_' + $.trim(data.id);
                     $(x).remove();
 
                 },
@@ -123,7 +133,7 @@
                     $('#form_crispy_approving_operator').empty();
                     $("#reservation_info_operator").empty();
 
-                    let x = '#reservation_id_' + $.trim(data.id);
+                    let x = '#reservation_operator_id_' + $.trim(data.id);
                     $(x).remove();
                 },
                 error: (error) => {
@@ -132,6 +142,83 @@
             });
         });
     });
+
+
+    function rezerwacja_operatora() {
+        //zniknięcie listy rezerwacji do zatwierdzenia
+        reservations = document.getElementById('list_of_reservations_operator')
+        reservations.style.display = 'none'
+        //pokazanie listy sal do rezerwacji
+        reservation = document.getElementById('reservation_operator')
+        reservation.style.display = 'block'
+        //znikniecie informacji o rezerwacjach do zatwierdzenia
+        more_reservations_info = document.getElementById('more_reservation_info_operator')
+        more_reservations_info.style.display = 'none'
+
+    }
+    //wyświetlanie sali do rezerwacji
+    function select_station_operator(lab) {
+
+        form_station = document.getElementById('form_reservation_operator')
+        //console.log(users_info.style)
+        form_station.style.display = 'block';
+        //console.log(users_info.style)
+        $.ajax({
+            url: '/page/operator/',
+            headers: { "X-Requested-With": "XMLHttpRequest" },
+            type: "GET",
+            data: { "lab": lab },
+            success: (data) => {
+                console.log(data)
+                const form = $("#form_reservation_operator");
+                form.empty();
+
+                const selected_lab = `<p class="selected_lab"> ${data['lab']}</p>`;
+
+                form.append(selected_lab);
+                //wyświetlenie formularza rezerwacji
+                form.append(data['form']);
+
+            },
+            error: (error) => {
+                console.log(error);
+            }
+        });
+    }
+
+//przesyłanie formularza rezerwacji
+    $(function () {
+    $("#form_reservation_operator").on('click', '#reservation_send_button_operator', (e) => {
+      e.preventDefault();
+
+      var lab = $(".selected_lab").text();
+      var lab = $.trim(lab);
+      const formData = {
+        start_date: form_id_reservation_operator.elements['start_date'].value,
+        end_date: form_id_reservation_operator.elements['end_date'].value,
+        lab_station: lab
+      }
+
+
+      $.ajax({
+        url: '/page/operator/',
+        type: "PUT",
+        //dataType: "json",
+        data: JSON.stringify({ formData: formData }),
+        headers: {
+          "X-Requested-With": "XMLHttpRequest2",
+          "X-CSRFToken": getCookie("csrftoken"),
+        },
+        success: (data) => {
+          console.log(data)
+          $("#form_reservation_operator").empty();
+        },
+        error: (error) => {
+          console.log(error);
+        }
+      });
+    });
+  });
 
 
 
@@ -155,7 +242,12 @@
 
 
 </div>
-<div id="reservation_operator"></div>
+<div id="reservation_operator" style="display:none">
+    {% for s in stations %}
+    <div onclick="select_station_operator('{{s}}')">{{s}}</div>
+    {%endfor%}
+
+</div>
 {%endblock%}
 
 
@@ -167,6 +259,13 @@
 
     <div id="reservation_info_operator"></div>
     <div id="form_crispy_approving_operator"></div>
+</div>
+
+<div id="form_reservation_operator">
+
+
+
+
 </div>
 
 
