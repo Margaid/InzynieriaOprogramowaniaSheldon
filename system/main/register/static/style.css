@@ -3,12 +3,11 @@ body {
   }
 
 .logo {
-
   font-family: 'Roboto', sans-serif;
-  padding: 10px;
+  padding: 20px;
   font-style: Regular;
   color: #1A831A;
-  font-size: 45px;
+  font-size: 50px;
   line-height: 53px;
   line-height: 100%;
   text-align: Center;
@@ -29,7 +28,9 @@ body {
 }
 
 .zalogujSie{  
-  
+  position: absolute;
+  left: 1520px;
+  top: 30px;
   border-radius: 20px;
   background-color: #FFF8E6;
   height: 50px;
@@ -45,6 +46,9 @@ body {
 } 
 
 .zalKonto{  
+  position: absolute;
+  left: 1400px;
+  top: 30px;
   border-radius: 20px;
   background-color: #1A831A;
   height: 50px;
@@ -58,3 +62,80 @@ body {
   vertical-align: bottom;
   letter-spacing: 1.2;
 } 
+
+.zalKontoRejestracja{
+  border-radius: 20px;
+  background-color: #1A831A;
+  height: 50px;
+  width: 105px;
+  font-family: 'Roboto', sans-serif;
+  color: #FFF8E6;
+  font-style: light;
+  font-size: 13px;
+  line-height: 29px;
+  text-align: center;
+  vertical-align: left;
+  letter-spacing: 1.2;
+}
+
+.zalogujSieLogin{  
+  border-radius: 20px;
+  background-color: #FFF8E6;
+  height: 50px;
+  width: 105px;
+  font-family: 'Roboto', sans-serif;
+  color: #1A831A;
+  font-style: light;
+  font-size: 13px;
+  line-height: 29px;
+  text-align: center;
+  vertical-align: left;
+  letter-spacing: 1.2;
+} 
+
+.centerIMG {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 70%;
+}
+
+.down{
+  text-align: center;
+  padding: 70 0 20 0;
+}
+
+.formularzRejestracja{
+  display: inlineblock;
+  float:left;
+  position: relative;
+  top: 100px;
+  left: 1300px;
+}
+
+.oczekiwanie{
+  font-family: 'Roboto', sans-serif;
+  padding: 30 0 0 0;
+  font-style: Regular;
+  color: #0E4714;
+  font-size: 45px;
+  line-height: 50px;
+  line-height: 100%;
+  text-align: Center;
+  vertical-align: Center;
+  letter-spacing: 3%;
+}
+.utworzNoweKonto{
+  font-family: 'Roboto', sans-serif;
+  color: #0E4714;
+  padding: 10 0 20 0;
+  font-style: bold;
+  font-size: 25px;
+  line-height: 29px;
+  vertical-align: bottom;
+  letter-spacing: 1.2;
+  
+}
+.registerIMG{
+  display: inlineblock;
+}

@@ -1,10 +1,18 @@
 {%extends "home/base.html"%}
-{% block title %} Elo  {%endblock%}
+{% load static%}
+{% block title %} Rezerwacja Stanowisk Laboratoryjnych {%endblock%}
 {% block content %}
 <div>
     <button class = "zalogujSie" onclick="location.href = '/login'">Zaloguj się</button>
     <button class ="zalKonto" onclick="location.href = '/register'">Załóż konto</button>
 </div>    
    
+{%block body%}
+    <div>
+        <div class="col-sm-10 offset-sm-1 ">
+            <img <img src="{% static 'media/home.jpg' %}" class="centerIMG"/>
+        </div>
+    </div>
+{%endblock%}
 
 {%endblock%}
